@@ -1,0 +1,22 @@
+# Install Docker and add user vagrant to docker group.
+
+---
+- name: Install docker
+  yum: name=docker state=present
+
+- name: Install Docker Compose
+  pip: 
+    name: docker-compose 
+    state: present
+
+- name: Create docker group
+  group:
+    name: docker
+    state: present
+
+- name: Add vagrant to docker group
+  user:
+    name: vagrant
+    groups: docker
+    append: yes
+  notify: Restart docker service
