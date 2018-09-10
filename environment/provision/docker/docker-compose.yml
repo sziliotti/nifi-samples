@@ -6,7 +6,9 @@ networks:
   proxy:
     external: true
 
+
 services:
+
   zookeeper:
   image: confluent/zookeeper
   container_name: kafka_zookeeper
@@ -65,7 +67,37 @@ services:
       - default
 
 ## ELK Stack
-  elk:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.2
+    container_name: elasticsearch    
+    environment:
+      - node.name=poces-nifi
+      - cluster.name=elasticsearch
+      - discovery.type=single-node
+      - VIRTUAL_HOST=elastic.mydomain.com
+      - VIRTUAL_PORT=9200
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - proxy
+      - default
+
+  kibana:
+    image: kibana
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      - SERVER_NAME=kibana
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - VIRTUAL_HOST=kibana.mydomain.com
+      - VIRTUAL_PORT=5601
+    networks:
+      - proxy
+      - default
+    depends_on:
+      - elasticsearch
 
   
 
