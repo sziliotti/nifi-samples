@@ -31,7 +31,7 @@ Experienced Linux user, knowledge in Java, containers, Big Data and that you hav
 * Create and boot VirtualBox instances.
 * Provisioning of hosts with all necessary tools.
 * Provisioning of a cluster for Hadoop.
-* Provisioning of Kafka, Apache NiFi, Elasticsearch and Kibana containers images by Docker Compose.
+* Provisioning of Kafka, Kafka Manager, Apache NiFi, Elasticsearch and Kibana containers images by Docker Compose.
 * You can SSH into the instances using ```vagrant ssh <host>```.
 * Automatic SSH key generation to access your hosts through vagrant commands.
 
