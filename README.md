@@ -1,4 +1,4 @@
-# Apache NiFI Samples
+# Apache NiFi Samples
 The objetive of this project is show some examples in [Apache NiFi](https://nifi.apache.org/). Apache NiFi supports powerful and scalable directed graphs of data routing, transformation, and system mediation logic.
 
 The descriptions of samples will be detailed in the sections below.
