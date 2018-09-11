@@ -103,22 +103,21 @@ Depending on the hardware of your computer and specifications choice in the Hado
 1. [Download and install VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 2. [Download and install Vagrant](http://www.vagrantup.com/).
 3. Install the Vagrant [Hostmanager plugin](https://github.com/smdahlen/vagrant-hostmanager)
-```bash
-$ vagrant plugin install vagrant-hostmanager
-```
+    ```bash
+    $ vagrant plugin install vagrant-hostmanager
+    ```
 
 4. Clone this repository.
-
-```bash
-$ git clone https://github.com/sziliotti/nifi-samples.git
-```
+    ```bash
+    $ git clone https://github.com/sziliotti/nifi-samples.git
+    ```
 
 5. Provision the bare cluster. It will ask you to enter your password, so it can modify your `/etc/hosts` file for easy access in your browser. It uses the Vagrant Hostmanager plugin to do this.
 
 6. Change directory (cd) into this project (directory).
-```bash
-$ cd nifi-samples
-```
+    ```bash
+    $ cd nifi-samples
+    ```
 7. Make sure you are in the right directory and Vagrantfile is on the same path where you type the command to start the provisioning, and run ```vagrant up``` to create the VM.
 8. Run ```vagrant ssh``` to get into your VM.
 9. Run ```vagrant destroy``` when you want to destroy and get rid of the VM.
@@ -149,13 +148,4 @@ TODO
 
 
 <br><br>
-<div class="panel panel-warning">
-**Warning**
-{: .panel-heading}
-<div class="panel-body">
-
-**Keep in mind that this is a personal and basic laboratory, with simple examples to demonstrate DataFlows in the Apache NiFi working.**
-
-</div>
-</div>
-:orange_book: **Keep in mind that this is a personal and basic laboratory, with simple examples to demonstrate DataFlows in the Apache NiFi working.**
+:warning: **Keep in mind that this is a personal and basic laboratory, with simple examples to demonstrate DataFlows working in the Apache NiFi.**

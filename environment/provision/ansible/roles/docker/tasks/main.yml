@@ -1,7 +1,7 @@
 # Install Docker and add user vagrant to docker group.
 
 ---
-- name: Install docker
+- name: Install Docker
   yum: name=docker state=present
 
 - name: Install Docker Compose
@@ -9,14 +9,18 @@
     name: docker-compose 
     state: present
 
-- name: Create docker group
+- name: Create Docker Group
   group:
     name: docker
     state: present
 
-- name: Add vagrant to docker group
+- name: Add vagrant to Docker Group
   user:
     name: vagrant
     groups: docker
     append: yes
   notify: Restart docker service
+
+- name: Run the Services Defined in docker-compose.yml
+  docker_service:
+    project_src: environment/provision/docker/
