@@ -44,6 +44,7 @@ The Hadoop cluster conists of 3 nodes:
 As you can see, you'll need at least 6GB of free RAM to run this lab. If you have less, you can try to remove one machine from the Vagrantfile, or using Hadoop in a single node. This will lead to worse performance though!
 
 ## Ansible playbook structure
+This is how the provisioning´s scripts, ansible playbooks and roles are organized:
 <!-- 
 ```bash
 $ tree provisioning/
@@ -138,13 +139,19 @@ Once built, the Web UIs are available at:
 ## NiFi Samples Descriptions
 
 ### Data Flow 1 - Twitter to Elasticsearch
-TODO
+TODO - General Description
+
+More details [here](SAMPLES/Twitter_Elasticsearch/README.md).
 
 ### Data Flow 2 - Mainframe Simulator to HDFS
-TODO
+TODO - General Description
+
+More details [here](xxxx).
 
 ### Data Flow 3 - Database Table to Hive
-TODO
+TODO - General Description
+
+More details [here](xxxx).
 
 
 <br><br>
