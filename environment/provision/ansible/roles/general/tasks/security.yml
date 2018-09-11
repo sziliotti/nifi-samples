@@ -1,4 +1,10 @@
 ---
+- name: Install SElinux ansible module dependencies
+  yum: name=libselinux-python state=installed
+
+#- name: Disable SELinux in conf file
+#  selinux: state=disabled
+
 - name: Set SELinux to permissive
   selinux:
     policy: targeted

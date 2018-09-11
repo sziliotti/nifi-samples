@@ -67,7 +67,7 @@ Vagrant.configure("2") do |config|
     # Softwares instalation: JDK8, Docker, Hadoop Cluster. 
     config.vm.provision "ansible" do |ansible|
         ansible.playbook = "environment/provision/ansible/nifi-dev-playbook.yml"
-        ansible.verbose = true
+        ansible.verbose = "v"
     end
     
   end
