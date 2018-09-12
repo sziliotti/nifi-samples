@@ -1,10 +1,10 @@
 # Apache NiFi Samples
-The objetive of this project is show some examples in [Apache NiFi](https://nifi.apache.org/). Apache NiFi supports powerful and scalable directed graphs of data routing, transformation, and system mediation logic.
+The objetive of this project is show some examples of data ingestion using [Apache NiFi](https://nifi.apache.org/). Apache NiFi supports powerful and scalable directed graphs of data routing, transformation, and system mediation logic.
 
-The descriptions of samples will be detailed in the sections below.
+The descriptions of samples are detailed in the sections below.
 
 ## Prerequisites
-Experienced Linux user, knowledge in Java, containers, Big Data and that you have ansible, vagrant and virtualbox installed on your machine. 
+Experienced Linux user, knowledge in Java, containers, Big Data concept and tools, and that you have Ansible, Vagrant and Virtualbox installed on your machine. 
 
 ### Installed on your desktop
 * macOS High Sierra (v10.13.6) (My host Operating System)
@@ -16,15 +16,16 @@ Experienced Linux user, knowledge in Java, containers, Big Data and that you hav
 
 ### Will be installed by the automation
 * [CentOS 7](https://www.centos.org/)
-* [Java 8 (OpenJDK)](http://openjdk.java.net/)
+* [Java 8 (OpenJDK)](http://openjdk.java.net/projects/jdk8/)
 * [Docker](https://www.docker.com/)
 * [Maven](https://maven.apache.org/)
 * [Hadoop](http://hadoop.apache.org/)
 * [Kafka](http://kafka.apache.org/) (by Docker [image](https://hub.docker.com/r/wurstmeister/kafka/))
 * [Kafka Manager](https://github.com/yahoo/kafka-manager) (by Docker [image](https://hub.docker.com/r/sheepkiller/kafka-manager/)) 
-* [Apache NiFi](https://nifi.apache.org/) (by Docker [image](https://hub.docker.com/r/apache/nifi/))
 * [Elasticsearch](https://www.elastic.co/) (by Docker [image](https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html))
 * [kibana](https://www.elastic.co/products/kibana) (by Docker [image](https://www.elastic.co/guide/en/kibana/current/docker.html))
+* [Apache NiFi](https://nifi.apache.org/) (by Docker [image](https://hub.docker.com/r/apache/nifi/))
+<!-- * [Apache MiNiFi](https://nifi.apache.org/minifi/) (by Docker [image](https://hub.docker.com/r/apache/nifi-minifi/)) -->
 
 
 ## Features
@@ -45,58 +46,37 @@ As you can see, you'll need at least 6GB of free RAM to run this lab. If you hav
 
 ## Ansible playbook structure
 This is how the provisioning´s scripts, ansible playbooks and roles are organized:
-<!-- 
+
 ```bash
 $ tree provisioning/
 provisioning/
-├── kafka-playbook.yml
-├── roles
-│   ├── general
-│   │   ├── handlers
-│   │   │   ├── main.yml
-│   │   │   └── restart-mdns.yml
-│   │   └── tasks
-│   │       ├── main.yml
-│   │       ├── packages.yml
-│   │       └── security.yml
-│   ├── kafka
-│   │   ├── files
-│   │   │   └── kafka.service
-│   │   ├── handlers
-│   │   │   ├── main.yml
-│   │   │   └── restart-kafka.yml
-│   │   ├── tasks
-│   │   │   ├── create-configuration.yml
-│   │   │   ├── create-npa.yml
-│   │   │   ├── install-kafka.yml
-│   │   │   ├── main.yml
-│   │   │   └── manage-service.yml
-│   │   ├── templates
-│   │   │   └── server.properties.j2
-│   │   └── vars
-│   │       └── main.yml
-│   └── zookeeper
-│       ├── files
-│       │   └── zookeeper-3.4.10.tar.gz
-│       ├── handlers
-│       │   ├── main.yml
-│       │   └── restart-zookeeper.yml
-│       ├── tasks
-│       │   ├── create-configuration.yml
-│       │   ├── create-npa.yml
-│       │   ├── install-zookeeper.yml
-│       │   ├── main.yml
-│       │   └── manage-service.yml
-│       ├── templates
-│       │   ├── zoo.cfg.j2
-│       │   └── zookeeper.service.j2
-│       └── vars
-│           └── main.yml
-└── zookeeper-playbook.yml
+├── ansible
+│   ├── nifi-dev-playbook.yml
+│   └── roles
+│       ├── docker
+│       │   ├── handlers
+│       │   │   └── main.yml
+│       │   └── tasks
+│       │       └── main.yml
+│       ├── general
+│       │   ├── handlers
+│       │   │   ├── main.yml
+│       │   │   └── restart-mdns.yml
+│       │   └── tasks
+│       │       ├── main.yml
+│       │       ├── packages.yml
+│       │       └── security.yml
+│       └── java
+│           └── tasks
+│               └── main.yml
+├── docker
+│   └── docker-compose.yml
+└── scripts
+    ├── setup-hadoop-slaves.sh
+    └── setup-hadoop.sh
 
-16 directories, 28 files
+12 directories, 12 files
 ```
--->
 
 ## Usage
 Depending on the hardware of your computer and specifications choice in the Hadoop cluster configuration, installation will probably take between 5 and 15 minutes.
@@ -150,6 +130,11 @@ TODO - General Description
 More details [here](xxxx).
 
 ### Data Flow 3 - Database Table to Hive
+TODO - General Description
+
+More details [here](xxxx).
+
+### Data Flow 4 - IoT to Cloud
 TODO - General Description
 
 More details [here](xxxx).
