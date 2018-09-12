@@ -45,58 +45,37 @@ As you can see, you'll need at least 6GB of free RAM to run this lab. If you hav
 
 ## Ansible playbook structure
 This is how the provisioning´s scripts, ansible playbooks and roles are organized:
-<!-- 
+
 ```bash
 $ tree provisioning/
 provisioning/
-├── kafka-playbook.yml
-├── roles
-│   ├── general
-│   │   ├── handlers
-│   │   │   ├── main.yml
-│   │   │   └── restart-mdns.yml
-│   │   └── tasks
-│   │       ├── main.yml
-│   │       ├── packages.yml
-│   │       └── security.yml
-│   ├── kafka
-│   │   ├── files
-│   │   │   └── kafka.service
-│   │   ├── handlers
-│   │   │   ├── main.yml
-│   │   │   └── restart-kafka.yml
-│   │   ├── tasks
-│   │   │   ├── create-configuration.yml
-│   │   │   ├── create-npa.yml
-│   │   │   ├── install-kafka.yml
-│   │   │   ├── main.yml
-│   │   │   └── manage-service.yml
-│   │   ├── templates
-│   │   │   └── server.properties.j2
-│   │   └── vars
-│   │       └── main.yml
-│   └── zookeeper
-│       ├── files
-│       │   └── zookeeper-3.4.10.tar.gz
-│       ├── handlers
-│       │   ├── main.yml
-│       │   └── restart-zookeeper.yml
-│       ├── tasks
-│       │   ├── create-configuration.yml
-│       │   ├── create-npa.yml
-│       │   ├── install-zookeeper.yml
-│       │   ├── main.yml
-│       │   └── manage-service.yml
-│       ├── templates
-│       │   ├── zoo.cfg.j2
-│       │   └── zookeeper.service.j2
-│       └── vars
-│           └── main.yml
-└── zookeeper-playbook.yml
+├── ansible
+│   ├── nifi-dev-playbook.yml
+│   └── roles
+│       ├── docker
+│       │   ├── handlers
+│       │   │   └── main.yml
+│       │   └── tasks
+│       │       └── main.yml
+│       ├── general
+│       │   ├── handlers
+│       │   │   ├── main.yml
+│       │   │   └── restart-mdns.yml
+│       │   └── tasks
+│       │       ├── main.yml
+│       │       ├── packages.yml
+│       │       └── security.yml
+│       └── java
+│           └── tasks
+│               └── main.yml
+├── docker
+│   └── docker-compose.yml
+└── scripts
+    ├── setup-hadoop-slaves.sh
+    └── setup-hadoop.sh
 
-16 directories, 28 files
+12 directories, 12 files
 ```
--->
 
 ## Usage
 Depending on the hardware of your computer and specifications choice in the Hadoop cluster configuration, installation will probably take between 5 and 15 minutes.
