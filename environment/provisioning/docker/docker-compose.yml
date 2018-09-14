@@ -3,7 +3,6 @@
 version: '3'
 
 services:
-
   zookeeper:
   image: confluent/zookeeper
   container_name: kafka_zookeeper
@@ -49,8 +48,6 @@ services:
     environment:
       - NIFI_WEB_HTTP_PORT='9090'
 
-
-## ELK Stack
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:latest
     container_name: elasticsearch    

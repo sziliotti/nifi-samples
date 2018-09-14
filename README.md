@@ -1,10 +1,10 @@
 # Apache NiFi Samples
-The objetive of this project is show some examples in [Apache NiFi](https://nifi.apache.org/). Apache NiFi supports powerful and scalable directed graphs of data routing, transformation, and system mediation logic.
+The objetive of this project is show some examples of data ingestion using [Apache NiFi](https://nifi.apache.org/). Apache NiFi supports powerful and scalable directed graphs of data routing, transformation, and system mediation logic.
 
-The descriptions of samples will be detailed in the sections below.
+The descriptions of samples are detailed in the sections below.
 
 ## Prerequisites
-Experienced Linux user, knowledge in Java, containers, Big Data and that you have ansible, vagrant and virtualbox installed on your machine. 
+Experienced Linux user, knowledge in Java, containers, Big Data concept and tools, and that you have Ansible, Vagrant and Virtualbox installed on your machine. 
 
 ### Installed on your desktop
 * macOS High Sierra (v10.13.6) (My host Operating System)
@@ -16,15 +16,16 @@ Experienced Linux user, knowledge in Java, containers, Big Data and that you hav
 
 ### Will be installed by the automation
 * [CentOS 7](https://www.centos.org/)
-* [Java 8 (OpenJDK)](http://openjdk.java.net/)
+* [Java 8 (OpenJDK)](http://openjdk.java.net/projects/jdk8/)
 * [Docker](https://www.docker.com/)
 * [Maven](https://maven.apache.org/)
 * [Hadoop](http://hadoop.apache.org/)
 * [Kafka](http://kafka.apache.org/) (by Docker [image](https://hub.docker.com/r/wurstmeister/kafka/))
 * [Kafka Manager](https://github.com/yahoo/kafka-manager) (by Docker [image](https://hub.docker.com/r/sheepkiller/kafka-manager/)) 
-* [Apache NiFi](https://nifi.apache.org/) (by Docker [image](https://hub.docker.com/r/apache/nifi/))
 * [Elasticsearch](https://www.elastic.co/) (by Docker [image](https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html))
 * [kibana](https://www.elastic.co/products/kibana) (by Docker [image](https://www.elastic.co/guide/en/kibana/current/docker.html))
+* [Apache NiFi](https://nifi.apache.org/) (by Docker [image](https://hub.docker.com/r/apache/nifi/))
+<!-- * [Apache MiNiFi](https://nifi.apache.org/minifi/) (by Docker [image](https://hub.docker.com/r/apache/nifi-minifi/)) -->
 
 
 ## Features
@@ -129,6 +130,11 @@ TODO - General Description
 More details [here](xxxx).
 
 ### Data Flow 3 - Database Table to Hive
+TODO - General Description
+
+More details [here](xxxx).
+
+### Data Flow 4 - IoT to Cloud
 TODO - General Description
 
 More details [here](xxxx).
