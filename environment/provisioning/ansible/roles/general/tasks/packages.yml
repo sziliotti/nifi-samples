@@ -17,4 +17,4 @@
     - git
     - vim
     - python-setuptools
- #   - python-pip
+    - python-pip
