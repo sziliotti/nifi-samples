@@ -23,4 +23,5 @@
 
 - name: Run the Services Defined in docker-compose.yml
   docker_service:
-    project_src: environment/provision/docker/
+    project_src: compose
+    state: present
