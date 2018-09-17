@@ -28,8 +28,7 @@ Experienced Linux user, knowledge in Java, containers, Big Data concept and tool
 <!-- * [Apache MiNiFi](https://nifi.apache.org/minifi/) (by Docker [image](https://hub.docker.com/r/apache/nifi-minifi/)) -->
 
 ## Topology
-This is the tools provisioning´s topology after run ```vagrant up```:
-
+This is the topology of tools instaled in the provisioning´s process, after run ```vagrant up```:
 <image_draw>
 
 ## Features

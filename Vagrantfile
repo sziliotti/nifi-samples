@@ -21,8 +21,9 @@ Vagrant.configure("2") do |config|
     config.vm.box = "centos/7"
         
     # Manage /etc/hosts on host and VMs
-    config.hostmanager.enabled = false
+    config.hostmanager.enabled = true
     config.hostmanager.manage_host = true
+    config.hostmanager.manage_guest = false
     config.hostmanager.include_offline = true
     config.hostmanager.ignore_private_ip = false
       
