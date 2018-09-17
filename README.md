@@ -27,6 +27,8 @@ Experienced Linux user, knowledge in Java, containers, Big Data concept and tool
 * [Apache NiFi](https://nifi.apache.org/) (by Docker [image](https://hub.docker.com/r/apache/nifi/))
 <!-- * [Apache MiNiFi](https://nifi.apache.org/minifi/) (by Docker [image](https://hub.docker.com/r/apache/nifi-minifi/)) -->
 
+## Topology
+TODO
 
 ## Features
 * Create and boot VirtualBox instances.
@@ -37,12 +39,12 @@ Experienced Linux user, knowledge in Java, containers, Big Data concept and tool
 * Automatic SSH key generation to access your hosts through vagrant commands.
 
 
-The Hadoop cluster conists of 3 nodes:
+The Hadoop cluster consists of 3 nodes:
 
 * Master node with 1GB of RAM (Running the NameNode, Hue, ResourceManager etc. after installing the Hadoop services)
 * 2 slaves with 512MB of RAM each (Running DataNodes)
 
-As you can see, you'll need at least 6GB of free RAM to run this lab. If you have less, you can try to remove one machine from the Vagrantfile, or using Hadoop in a single node. This will lead to worse performance though!
+As you can see, you'll need at least 8GB of free RAM to run this lab. If you have less, you can try to remove one machine from the Vagrantfile, or using Hadoop in a single node. This will lead to worse performance though!
 
 ## Ansible playbook structure
 This is how the provisioning´s scripts, ansible playbooks and roles are organized:
@@ -69,7 +71,7 @@ provisioning/
 │       └── java
 │           └── tasks
 │               └── main.yml
-├── docker
+├── docker-compose
 │   └── docker-compose.yml
 └── scripts
     ├── setup-hadoop-slaves.sh
@@ -108,10 +110,10 @@ Depending on the hardware of your computer and specifications choice in the Hado
 Once built, the Web UIs are available at:
 * JobTracker web interface: (http://127.0.0.1:50030/jobtracker.jsp)
 * NameNode web interface: (http://127.0.0.1:50070/dfshealth.html) (only when HDFS is enabled)
-* Nifi web interface: (http://127.0.0.1:9090/nifi)
-* Kafka Manager web interface: (http://127.0.0.1:9000/)
-* Elasticsearch web interface: (http://127.0.0.1:9200/_cat/health)
-* Kibana web interface: (http://127.0.0.1:5601/)
+* Nifi web interface: (http://192.168.50.30:9090/nifi)
+* Kafka Manager web interface: (http://192.168.50.30:9000/)
+* Elasticsearch web interface: (http://192.168.50.30:9200/_cat/health)
+* Kibana web interface: (http://192.168.50.30:5601/)
 
 **Note:** Hadoop will use a lot of disk space for the slaves when building a cluster.
 

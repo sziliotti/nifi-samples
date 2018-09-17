@@ -4,10 +4,10 @@ version: '3'
 
 services:
   zookeeper:
-  image: confluent/zookeeper
-  container_name: kafka_zookeeper
-  ports:
-    - "2181:2181"
+    image: confluent/zookeeper
+    container_name: kafka_zookeeper
+    ports:
+      - "2181:2181"
 
   kafka:
     image: wurstmeister/kafka
@@ -24,6 +24,7 @@ services:
       - KAFKA_GROUP_MAX_SESSION_TIMEOUT_MS=60000
       - KAFKA_NUM_PARTITIONS=2
       - KAFKA_DELETE_RETENTION_MS=1000
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
     depends_on: 
       - zookeeper
 
@@ -49,7 +50,7 @@ services:
       - NIFI_WEB_HTTP_PORT='9090'
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:latest
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.0
     container_name: elasticsearch    
     environment:
       - node.name=poces-nifi
@@ -62,7 +63,7 @@ services:
       - "9300:9300"
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:latest
+    image: docker.elastic.co/kibana/kibana:6.4.0
     container_name: kibana
     ports:
       - "5601:5601"
@@ -73,6 +74,3 @@ services:
       - VIRTUAL_PORT=5601
     depends_on:
       - elasticsearch
-
-  
-

@@ -19,9 +19,15 @@
     name: vagrant
     groups: docker
     append: yes
-  notify: Restart docker service
+  #notify: Restart docker service
 
-- name: Run the Services Defined in docker-compose.yml
-  docker_service:
-    project_src: compose
-    state: present
+- name: Restart docker service
+  service: name=docker enabled=yes state=restarted
+
+- name: Run the Services Defined in docker-compose.yml.
+  command: docker-compose -f /vagrant/environment/provisioning/docker-compose/docker-compose.yml up -d
+
+#- name: Run the Services Defined in docker-compose.yml
+#  docker_service:
+#    project_src: /vagrant/environment/provisioning/docker-compose
+#    state: present

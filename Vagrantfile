@@ -1,6 +1,20 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+$hosts_script = <<SCRIPT
+#!/bin/bash
+
+cat > /etc/hosts <<EOF
+127.0.0.1       localhost
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+EOF
+SCRIPT
+
 Vagrant.configure("2") do |config|
     
     # Define base image
@@ -12,6 +26,11 @@ Vagrant.configure("2") do |config|
     config.hostmanager.include_offline = true
     config.hostmanager.ignore_private_ip = false
       
+
+    config.vm.network :private_network, ip: "192.168.50.30"
+    config.vm.hostname = "vm-nifi-env"
+    #config.vm.provision :shell, :inline => $hosts_script
+    #config.vm.provision :hostmanager
 
     # Create a forwarded port mapping which allows access to a specific port
     # within the machine from a port on the host machine and only allow access
@@ -66,9 +85,10 @@ Vagrant.configure("2") do |config|
     #
     # Softwares instalation: JDK8, Docker, Hadoop Cluster. 
     config.vm.provision "ansible" do |ansible|
-        ansible.playbook = "environment/provisioning/ansible/nifi-dev-playbook.yml"
+        ansible.playbook = "environment/provisioning/ansible/nifi-env-playbook.yml"
         ansible.verbose = "v"
     end
     
   end
   
+
