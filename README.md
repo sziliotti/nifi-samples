@@ -37,7 +37,7 @@ This is the tools provisioning´s topology after run ```vagrant up```:
 * Provisioning of hosts with all necessary tools.
 * Provisioning of a cluster for Hadoop.
 * Provisioning of Kafka, Kafka Manager, Apache NiFi, Elasticsearch and Kibana containers images by Docker Compose.
-* You can SSH into the instances using ```vagrant ssh <host>```.
+* You can SSH into the instances using ```vagrant ssh <hostname>```.
 * Automatic SSH key generation to access your hosts through vagrant commands.
 
 
@@ -110,7 +110,7 @@ Depending on the hardware of your computer and specifications choice in the Hado
     $ cd nifi-samples
     ```
 7. Make sure you are in the right directory and Vagrantfile is on the same path where you type the command to start the provisioning, and run ```vagrant up``` to create the VM.
-8. Run ```vagrant ssh``` to get into your VM.
+8. Run ```vagrant ssh <hostname>``` to get into your VM.
 9. Run ```vagrant destroy``` when you want to destroy and get rid of the VM.
 
 
