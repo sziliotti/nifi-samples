@@ -28,7 +28,9 @@ Experienced Linux user, knowledge in Java, containers, Big Data concept and tool
 <!-- * [Apache MiNiFi](https://nifi.apache.org/minifi/) (by Docker [image](https://hub.docker.com/r/apache/nifi-minifi/)) -->
 
 ## Topology
-TODO
+This is the tools provisioning´s topology after run ```vagrant up```:
+
+<image_draw>
 
 ## Features
 * Create and boot VirtualBox instances.
@@ -41,16 +43,16 @@ TODO
 
 The Hadoop cluster consists of 3 nodes:
 
-* Master node with 1GB of RAM (Running the NameNode, Hue, ResourceManager etc. after installing the Hadoop services)
-* 2 slaves with 512MB of RAM each (Running DataNodes)
+* Master node with 2GB of RAM (Running the NameNode, Hue, ResourceManager etc. after installing the Hadoop services)
+* 2 slaves with 1GB of RAM each (Running DataNodes)
 
 As you can see, you'll need at least 8GB of free RAM to run this lab. If you have less, you can try to remove one machine from the Vagrantfile, or using Hadoop in a single node. This will lead to worse performance though!
 
-## Ansible playbook structure
+## Ansible playbook and provisioning´s scripts structure
 This is how the provisioning´s scripts, ansible playbooks and roles are organized:
 
 ```bash
-$ tree provisioning/                                                                                                                                                                              [26473fa]
+$ tree provisioning/
 provisioning/
 ├── ansible
 │   ├── nifi-env-playbook.yml
