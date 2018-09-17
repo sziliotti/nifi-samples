@@ -50,10 +50,10 @@ As you can see, you'll need at least 8GB of free RAM to run this lab. If you hav
 This is how the provisioning´s scripts, ansible playbooks and roles are organized:
 
 ```bash
-$ tree provisioning/
+$ tree provisioning/                                                                                                                                                                              [26473fa]
 provisioning/
 ├── ansible
-│   ├── nifi-dev-playbook.yml
+│   ├── nifi-env-playbook.yml
 │   └── roles
 │       ├── docker
 │       │   ├── handlers
@@ -68,16 +68,22 @@ provisioning/
 │       │       ├── main.yml
 │       │       ├── packages.yml
 │       │       └── security.yml
-│       └── java
-│           └── tasks
+│       ├── java
+│       │   └── tasks
+│       │       └── main.yml
+│       └── scala
+│           ├── tasks
+│           │   └── main.yml
+│           └── vars
 │               └── main.yml
 ├── docker-compose
 │   └── docker-compose.yml
 └── scripts
+    ├── create-kafka-topics.sh
     ├── setup-hadoop-slaves.sh
     └── setup-hadoop.sh
 
-12 directories, 12 files
+15 directories, 15 files
 ```
 
 ## Usage
