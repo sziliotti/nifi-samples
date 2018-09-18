@@ -29,12 +29,13 @@ Experienced Linux user, knowledge in Java, containers, Big Data concept and tool
 
 ## Topology
 This is the topology of tools instaled in the provisioning´s process, after run ```vagrant up```:
+
 <image_draw>
 
 ## Features
 * Create and boot VirtualBox instances.
 * Provisioning of hosts with all necessary tools.
-* Provisioning of a cluster for Hadoop.
+* Provisioning of a cluster for Hadoop, using Cloudera Distribution Hadoop (CDH).
 * Provisioning of Kafka, Kafka Manager, Apache NiFi, Elasticsearch and Kibana containers images by Docker Compose.
 * You can SSH into the instances using ```vagrant ssh <hostname>```.
 * Automatic SSH key generation to access your hosts through vagrant commands.
@@ -45,7 +46,11 @@ The Hadoop cluster consists of 3 nodes:
 * Master node with 2GB of RAM (Running the NameNode, Hue, ResourceManager etc. after installing the Hadoop services)
 * 2 slaves with 1GB of RAM each (Running DataNodes)
 
-As you can see, you'll need at least 8GB of free RAM to run this lab. If you have less, you can try to remove one machine from the Vagrantfile, or using Hadoop in a single node. This will lead to worse performance though!
+You'll need at least 8GB of free RAM to run this lab. If you have less, you can try to remove one machine node from the Vagrantfile, or using Hadoop in a single node. This will lead to worse performance though!
+
+It runs the latest Cloudera Distribution Hadoop: **CDH5**, and allows you to practise the use of Cloudera Manager for installing the Hadoop stack. The goal of this is creating an environment ideally suited for [Cloudera Manager](http://www.cloudera.com/content/cloudera/en/products-and-services/cloudera-enterprise/cloudera-manager.html). This gives you the freedom to actually install the services you want, and change the configuration how you see fit.
+
+This README describes how to get the cluster with Cloudera Manager up and running. For more detailed instructions on how to install the whole Hadoop stack on that, you can use [this guide](https://blog.cloudera.com/blog/2014/06/how-to-install-a-virtual-apache-hadoop-cluster-with-vagrant-and-cloudera-manager/) on Cloudera blog.
 
 ## Ansible playbook and provisioning´s scripts structure
 This is how the provisioning´s scripts, ansible playbooks and roles are organized:
@@ -88,7 +93,7 @@ provisioning/
 ```
 
 ## Usage
-Depending on the hardware of your computer and specifications choice in the Hadoop cluster configuration, installation will probably take between 5 and 15 minutes.
+Depending on the hardware of your computer and specifications choice in the Hadoop cluster configuration, installation will probably take between 10 and 15 minutes.
 
 1. [Download and install VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 2. [Download and install Vagrant](http://www.vagrantup.com/).
@@ -109,7 +114,7 @@ Depending on the hardware of your computer and specifications choice in the Hado
     $ cd nifi-samples
     ```
 7. Make sure you are in the right directory and Vagrantfile is on the same path where you type the command to start the provisioning, and run ```vagrant up``` to create the VM.
-8. Run ```vagrant ssh <hostname>``` to get into your VM.
+8. Run ```vagrant ssh <hostname>``` to get into your VM. In our case, we create 4 VMs a least, where 3 are for the Hadoop Cluster, and 1 for Docker images containers.
 9. Run ```vagrant destroy``` when you want to destroy and get rid of the VM.
 
 
@@ -117,6 +122,7 @@ Depending on the hardware of your computer and specifications choice in the Hado
 Once built, the Web UIs are available at:
 * JobTracker web interface: (http://127.0.0.1:50030/jobtracker.jsp)
 * NameNode web interface: (http://127.0.0.1:50070/dfshealth.html) (only when HDFS is enabled)
+* Cloudera Manager web console: (http://192.168.50.10:7180)
 * Nifi web interface: (http://192.168.50.30:9090/nifi)
 * Kafka Manager web interface: (http://192.168.50.30:9000/)
 * Elasticsearch web interface: (http://192.168.50.30:9200/_cat/health)
