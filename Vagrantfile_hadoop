@@ -1,0 +1,199 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+$node_script = <<SCRIPT
+#!/bin/bash
+
+#Disable selinux:
+sed -i 's/^\(SELINUX\s*=\s*\).*$/\1disabled/' /etc/selinux/config
+
+#Setup NTP:
+yum -y install ntp
+chkconfig ntpd on
+service ntpd start
+sudo hwclock --systohc
+
+#Disable Firawall:
+chkconfig iptables off
+SCRIPT
+
+$manager_script = <<SCRIPT
+#!/bin/bash
+
+wget -O /etc/yum.repos.d/cloudera-manager.repo http://archive.cloudera.com/cm5/redhat/7/x86_64/cm/cloudera-manager.repo 
+yum -y update
+
+oracle-j2sdk1.7 cloudera-manager-server-db cloudera-manager-server cloudera-manager-daemons
+
+service cloudera-scm-server-db initdb
+service cloudera-scm-server-db start
+service cloudera-scm-server start
+
+SCRIPT
+
+$hosts_script = <<SCRIPT
+cat > /etc/hosts <<EOF
+127.0.0.1       localhost
+EOF
+SCRIPT
+
+
+## Delete by DandyDev
+$master_script = <<SCRIPT
+#!/bin/bash
+
+yum install curl -y
+
+REPOCM=${REPOCM:-cm5}
+CM_REPO_HOST=${CM_REPO_HOST:-archive.cloudera.com}
+CM_MAJOR_VERSION=$(echo $REPOCM | sed -e 's/cm\\([0-9]\\).*/\\1/')
+CM_VERSION=$(echo $REPOCM | sed -e 's/cm\\([0-9][0-9]*\\)/\\1/')
+OS_CODENAME=$(lsb_release -sc)
+OS_DISTID=$(lsb_release -si | tr '[A-Z]' '[a-z]')
+
+if [ $CM_MAJOR_VERSION -ge 4 ]; then
+  cat > /etc/apt/sources.list.d/cloudera-$REPOCM.list <<EOF
+deb [arch=amd64] http://$CM_REPO_HOST/cm$CM_MAJOR_VERSION/$OS_DISTID/$OS_CODENAME/amd64/cm $OS_CODENAME-$REPOCM contrib
+deb-src http://$CM_REPO_HOST/cm$CM_MAJOR_VERSION/$OS_DISTID/$OS_CODENAME/amd64/cm $OS_CODENAME-$REPOCM contrib
+EOF
+curl -s http://$CM_REPO_HOST/cm$CM_MAJOR_VERSION/$OS_DISTID/$OS_CODENAME/amd64/cm/archive.key > key
+apt-key add key
+rm key
+fi
+
+yum update
+
+export DEBIAN_FRONTEND=noninteractive
+
+yum -y install oracle-j2sdk1.7 cloudera-manager-server-db cloudera-manager-server cloudera-manager-daemons
+
+service cloudera-scm-server-db initdb
+service cloudera-scm-server-db start
+service cloudera-scm-server start
+SCRIPT
+## Delete by DandyDev
+
+
+# Total Hadoop slave nodes
+TOTAL_SLAVE_NODES=2
+
+Vagrant.configure("2") do |config|
+
+    # Define base image
+    config.vm.box = "centos/7"
+    
+    # Manage /etc/hosts on host and VMs
+    config.hostmanager.enabled = true
+    config.hostmanager.manage_host = true
+    config.hostmanager.manage_guest = false
+    config.hostmanager.include_offline = true
+    config.hostmanager.ignore_private_ip = false
+
+    # Share an additional folder to the guest VM. The first argument is the path on the host to the actual folder. The second argument is
+    # the path on the guest to mount the folder. And the optional third argument is a set of non-required options.        
+    config.vm.synced_folder ".", "/vagrant", type: "rsync",
+      rsync__auto: true
+
+    # Synchronize clocks each time when desync becomes > 1s (1000ms) between host and guest.
+    config.vm.customize ["guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 1000]
+
+    ## CONFIG HADOOP CLUSTER
+    ##***************************************
+    # Total Hadoop nodes
+    numNodes = 3
+    r = 1..numNodes
+    (r.first).upto(r.last).each do |i|
+        # Hadoop Nodes configurations.        
+        config.vm.define "hadoop-node#{i}" do |node|
+            node.vm.network "private_network", ip: "192.168.50.#{i+10}"
+            node.vm.customize ["modifyvm", :id, "--cpus", 1]
+
+            if i == r.first
+                node.vm.hostname = "vm-cluster-hadoop-master"
+
+                hadoop_master.customize ["modifyvm", :id, "--memory", 2048]                
+                hadoop_master.vm.customize ["modifyvm", :id, "--name", "hadoop-master"]
+
+                ## Hadoop Cluster Ports mapping:
+                node.vm.network "forwarded_port", guest: 50070, host: 50070, host_ip: "127.0.0.1"
+
+                 ## Cloudera Manager web console Ports mapping:
+                node.vm.network "forwarded_port", guest: 7180, host: 7180, host_ip: "127.0.0.1"
+
+            else
+                node.vm.hostname = "vm-cluster-hadoop-slave#{i}"
+
+                node.vm.customize ["modifyvm", :id, "--memory", 1024]
+                node.vm.customize ["modifyvm", :id, "--name", "hadoop-slave#{i}"]
+
+            end
+
+            node.vm.provision :shell, :inline => $node_script
+            node.vm.provision :shell, :inline => $hosts_script
+            node.vm.provision :hostmanager            
+
+            if i == r.first
+                node.vm.provision :shell, :inline => $manager_script
+                #node.vm.provision :ansible do |ansible|
+                #  ansible.inventory_path = "hosts-cluster.yml"
+                #  ansible.verbose = "v"
+                #  ansible.sudo = true
+                #  ansible.playbook = "site.yml"
+                #  ansible.limit = 'hadoop_all'
+                #end  
+            end
+        end
+    end
+
+
+
+
+
+    # Hadoop master VM configuration
+    config.vm.define "hadoop_master" do |hadoop_master|
+        hadoop_master.vm.hostname = "vm-cluster-hadoop-master"
+        hadoop_master.vm.network "private_network", ip: "192.168.50.10"
+        
+        hadoop_master.customize ["modifyvm", :id, "--memory", 2048]
+        hadoop_master.customize ["modifyvm", :id, "--cpus", 1]
+        hadoop_master.vm.customize ["modifyvm", :id, "--name", "hadoop-master"]
+        
+        hadoop_master.vm.provision :shell, :inline => $hosts_script
+        hadoop_master.vm.provision :hostmanager
+        hadoop_master.vm.provision :shell, :inline => $master_script
+    end
+
+    # Hadoop Slave1 VM configuration
+    config.vm.define "hadoop_slave1" do |hadoop_slave1|
+        hadoop_slave1.vm.hostname = "vm-cluster-hadoop-slave1"
+        hadoop_slave1.vm.network "private_network", ip: "192.168.50.11"
+
+        hadoop_slave1.customize ["modifyvm", :id, "--memory", 1024]
+        hadoop_slave1.customize ["modifyvm", :id, "--cpus", 1]
+                        
+        hadoop_slave1.vm.provision :shell, :inline => $hosts_script
+        hadoop_slave1.vm.provision :hostmanager
+    end
+    
+    # Hadoop Slave2 VM configuration
+    config.vm.define "hadoop_slave2" do |hadoop_slave2|
+        hadoop_slave2.vm.hostname = "vm-cluster-hadoop-slave2"
+        hadoop_slave2.vm.network "private_network", ip: "192.168.50.12"
+        
+        hadoop_slave2.customize ["modifyvm", :id, "--memory", 1024]
+        hadoop_slave2.customize ["modifyvm", :id, "--cpus", 1]
+                    
+        hadoop_slave2.vm.provision :shell, :inline => $hosts_script
+        hadoop_slave2.vm.provision :hostmanager
+
+        #hadoop_slave2.vm.provision :ansible do |ansible|
+        #  ansible.inventory_path = "hosts-cluster.yml"
+        #  ansible.verbose = "v"
+        #  ansible.sudo = true
+        #  ansible.playbook = "site.yml"
+        #  ansible.limit = 'hadoop_all'
+        #end
+    end
+
+      
+end
