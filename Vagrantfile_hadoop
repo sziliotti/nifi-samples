@@ -23,7 +23,7 @@ $manager_script = <<SCRIPT
 wget -O /etc/yum.repos.d/cloudera-manager.repo http://archive.cloudera.com/cm5/redhat/7/x86_64/cm/cloudera-manager.repo 
 yum -y update
 
-oracle-j2sdk1.7 cloudera-manager-server-db cloudera-manager-server cloudera-manager-daemons
+yum -y install oracle-j2sdk1.7 cloudera-manager-server-db cloudera-manager-server cloudera-manager-daemons
 
 service cloudera-scm-server-db initdb
 service cloudera-scm-server-db start
@@ -74,9 +74,6 @@ SCRIPT
 ## Delete by DandyDev
 
 
-# Total Hadoop slave nodes
-TOTAL_SLAVE_NODES=2
-
 Vagrant.configure("2") do |config|
 
     # Define base image
@@ -91,11 +88,16 @@ Vagrant.configure("2") do |config|
 
     # Share an additional folder to the guest VM. The first argument is the path on the host to the actual folder. The second argument is
     # the path on the guest to mount the folder. And the optional third argument is a set of non-required options.        
-    config.vm.synced_folder ".", "/vagrant", type: "rsync",
-      rsync__auto: true
+    config.vm.synced_folder ".", "/vagrant", type: "rsync", 
+        rsync__auto: true, 
+        rsync__exclude: ".git/"
+    
+    # Provider-specific configuration so you can fine-tune various backing providers for Vagrant. These expose provider-specific options.   
+    config.vm.provider "virtualbox" do |vb|
+        # Synchronize clocks each time when desync becomes > 1s (1000ms) between host and guest.
+        vb.customize [ "guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 1000 ]      
+    end
 
-    # Synchronize clocks each time when desync becomes > 1s (1000ms) between host and guest.
-    config.vm.customize ["guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 1000]
 
     ## CONFIG HADOOP CLUSTER
     ##***************************************
@@ -103,16 +105,20 @@ Vagrant.configure("2") do |config|
     numNodes = 3
     r = 1..numNodes
     (r.first).upto(r.last).each do |i|
-        # Hadoop Nodes configurations.        
+        # Hadoop Nodes configurations.
         config.vm.define "hadoop-node#{i}" do |node|
             node.vm.network "private_network", ip: "192.168.50.#{i+10}"
-            node.vm.customize ["modifyvm", :id, "--cpus", 1]
-
+            
+            node.vm.provider :virtualbox do |v|
+                v.customize ["modifyvm", :id, "--cpus", 1]
+            end
+           
             if i == r.first
                 node.vm.hostname = "vm-cluster-hadoop-master"
-
-                hadoop_master.customize ["modifyvm", :id, "--memory", 2048]                
-                hadoop_master.vm.customize ["modifyvm", :id, "--name", "hadoop-master"]
+                node.vm.provider :virtualbox do |v|
+                    v.name ="hadoop-master"
+                    v.customize ["modifyvm", :id, "--memory", 2048]                    
+                end
 
                 ## Hadoop Cluster Ports mapping:
                 node.vm.network "forwarded_port", guest: 50070, host: 50070, host_ip: "127.0.0.1"
@@ -122,9 +128,10 @@ Vagrant.configure("2") do |config|
 
             else
                 node.vm.hostname = "vm-cluster-hadoop-slave#{i}"
-
-                node.vm.customize ["modifyvm", :id, "--memory", 1024]
-                node.vm.customize ["modifyvm", :id, "--name", "hadoop-slave#{i}"]
+                node.vm.provider :virtualbox do |v|
+                    v.name = "hadoop-slave#{i}"
+                    v.customize ["modifyvm", :id, "--memory", 1024]                    
+                end
 
             end
 
@@ -146,21 +153,67 @@ Vagrant.configure("2") do |config|
     end
 
 
+    ## CONFIG NIFI ENV
+    ##***************************************  
+    config.vm.define "nifi_env" do |nifi_env|
+        nifi_env.vm.hostname = "vm-nifi-env"
+        nifi_env.vm.network :private_network, ip: "192.168.50.30"
+        nifi_env.vm.provider :virtualbox do |v|
+            v.name = "nifi-env"
+            v.customize ["modifyvm", :id, "--memory", 4096]
+            v.customize ["modifyvm", :id, "--cpus", 1]
+        end
+        
+        nifi_env.vm.provision :shell, :inline => $hosts_script
+        nifi_env.vm.provision :hostmanager
 
 
+        # Create a forwarded port mapping which allows access to a specific port within the machine from a port on the host
+        # machine and only allow access via 127.0.0.1 to disable public access
+        #         
+        # Kafka´s Ports mapping:
+        nifi_env.vm.network "forwarded_port", guest: 3030, host: 3030, host_ip: "127.0.0.1"
+        nifi_env.vm.network "forwarded_port", guest: 2181, host: 2181, host_ip: "127.0.0.1"
+        nifi_env.vm.network "forwarded_port", guest: 9092, host: 9092, host_ip: "127.0.0.1"
 
-    # Hadoop master VM configuration
+        ## Kafka Manager Ports mapping:
+        nifi_env.vm.network "forwarded_port", guest: 9000, host: 9000, host_ip: "127.0.0.1"
+
+        ## Docker Ports mapping:
+        nifi_env.vm.network "forwarded_port", guest: 2375, host: 2375, host_ip: "127.0.0.1"
+
+        ## Apache NiFi Ports mapping:
+        nifi_env.vm.network "forwarded_port", guest: 8080, host: 8080, host_ip: "127.0.0.1"
+
+        ## ELK stack (Elasticsearch e Kibana) Ports mapping:
+        nifi_env.vm.network "forwarded_port", guest: 9200, host: 9200, host_ip: "127.0.0.1"
+        nifi_env.vm.network "forwarded_port", guest: 9300, host: 9300, host_ip: "127.0.0.1"
+        nifi_env.vm.network "forwarded_port", guest: 5601, host: 5601, host_ip: "127.0.0.1"
+
+
+        # Enable provisioning with a shell script and Ansible playbook.
+        #
+        # Softwares instalation: JDK8, Docker, Hadoop Cluster. 
+        #nifi_env.vm.provision "ansible" do |ansible|
+        #    ansible.playbook = "environment/provisioning/ansible/nifi-env-playbook.yml"
+        #    ansible.verbose = "v"
+        #end
+    end
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+### 2a OPCAO
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    # Hadoop Master VM configuration
     config.vm.define "hadoop_master" do |hadoop_master|
         hadoop_master.vm.hostname = "vm-cluster-hadoop-master"
-        hadoop_master.vm.network "private_network", ip: "192.168.50.10"
-        
-        hadoop_master.customize ["modifyvm", :id, "--memory", 2048]
+        hadoop_master.vm.network "private_network", ip: "192.168.50.11"
+
+        hadoop_master.customize ["modifyvm", :id, "--memory", 1024]
         hadoop_master.customize ["modifyvm", :id, "--cpus", 1]
-        hadoop_master.vm.customize ["modifyvm", :id, "--name", "hadoop-master"]
-        
+                        
         hadoop_master.vm.provision :shell, :inline => $hosts_script
         hadoop_master.vm.provision :hostmanager
-        hadoop_master.vm.provision :shell, :inline => $master_script
     end
 
     # Hadoop Slave1 VM configuration
@@ -194,6 +247,5 @@ Vagrant.configure("2") do |config|
         #  ansible.limit = 'hadoop_all'
         #end
     end
-
       
 end

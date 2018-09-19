@@ -78,7 +78,7 @@ Vagrant.configure("2") do |config|
         vb.customize [ "guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 1000 ]
   
     #   # Customize the amount of memory on the VM:
-        vb.memory = "4048"
+        vb.memory = "4096"
     end
 
   
