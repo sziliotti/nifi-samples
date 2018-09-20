@@ -14,9 +14,10 @@ service ntpd start
 sudo hwclock --systohc
 
 #Disable Firawall:
-service iptables save
-service iptables stop
-chkconfig iptables off
+systemctl disable firewalld
+#service iptables save
+#service iptables stop
+#chkconfig iptables off
 SCRIPT
 
 $manager_script = <<SCRIPT
@@ -30,12 +31,9 @@ yum -y install oracle-j2sdk1.7 cloudera-manager-server-db cloudera-manager-serve
 service cloudera-scm-server-db initdb
 service cloudera-scm-server-db start
 service cloudera-scm-server start
-
 SCRIPT
 
 $hosts_script = <<SCRIPT
-#!/bin/bash
-
 cat > /etc/hosts <<EOF
 127.0.0.1       localhost
 EOF
@@ -102,19 +100,24 @@ Vagrant.configure("2") do |config|
 
             end
 
+            #node.vm.provision :ansible do |ansible|
+            #  ansible.inventory_path = "environment/provisioning/ansible/inventory/hosts-hadoop-cluster.inv"
+            #  ansible.verbose = "v"
+            #  ansible.sudo = true
+            #  ansible.playbook = "environment/provisioning/ansible/hadoop-cluster-playbook.yml"
+            #  ansible.limit = 'hadoop_all'
+            #end
+            
+            #node.vm.provision :shell, :inline => $hosts_script
+            #node.vm.provision :hostmanager 
+
+
             node.vm.provision :shell, :inline => $node_script
             node.vm.provision :shell, :inline => $hosts_script
             node.vm.provision :hostmanager            
 
             if i == r.first
-                node.vm.provision :shell, :inline => $manager_script
-                #node.vm.provision :ansible do |ansible|
-                #  ansible.inventory_path = "hosts-cluster.yml"
-                #  ansible.verbose = "v"
-                #  ansible.sudo = true
-                #  ansible.playbook = "site.yml"
-                #  ansible.limit = 'hadoop_all'
-                #end  
+                node.vm.provision :shell, :inline => $manager_script                 
             end
         end
     end

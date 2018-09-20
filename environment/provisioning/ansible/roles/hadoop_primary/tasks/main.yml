@@ -1,0 +1,5 @@
+---
+- name: Setup Hadoop CDH
+  shell: /vagrant/environment/provisioning/scripts/setup-hadoop.sh
+
+  

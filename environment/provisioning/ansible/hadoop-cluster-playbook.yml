@@ -1,0 +1,8 @@
+---
+- hosts: hadoop_all
+  roles:
+   - general
+
+- hosts: hadoop_master_primary
+  roles:
+  - { role: hadoop_primary }

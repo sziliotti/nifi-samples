@@ -84,7 +84,6 @@ provisioning/
 │   └── docker-compose.yml
 └── scripts
     ├── create-kafka-topics.sh
-    ├── setup-hadoop-slaves.sh
     └── setup-hadoop.sh
 
 15 directories, 15 files

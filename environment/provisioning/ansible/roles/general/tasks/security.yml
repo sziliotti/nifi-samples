@@ -4,7 +4,7 @@
     name: libselinux-python 
     state: installed
 
-- name: Disable SELinux in conf file
+- name: Disable SELinux in /etc/selinux/config file
   selinux: 
     state: disabled
 
@@ -18,3 +18,11 @@
     name: firewalld 
     enabled: no 
     state: stopped
+
+
+  
+- name: Stop iptables
+  command: service iptables stop
+
+- name: Stop iptables6
+  command: service ip6tables stop    

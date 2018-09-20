@@ -20,3 +20,12 @@
     - vim
     - python-setuptools
     - python-pip
+
+
+- name: Install NTP
+  yum:
+    pkg: ntp
+    state: installed
+
+- name: Start NTP
+  command: service ntpd start
