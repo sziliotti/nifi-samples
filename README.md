@@ -123,7 +123,7 @@ Once built, the Web UIs are available at:
 * JobTracker web interface: (http://127.0.0.1:50030/jobtracker.jsp)
 * NameNode web interface: (http://127.0.0.1:50070/dfshealth.html) (only when HDFS is enabled)
 * Cloudera Manager web console: (http://192.168.50.10:7180)
-* Nifi web interface: (http://192.168.50.30:9090/nifi)
+* Nifi web interface: (http://192.168.50.30:8080/nifi)
 * Kafka Manager web interface: (http://192.168.50.30:9000/)
 * Elasticsearch web interface: (http://192.168.50.30:9200/_cat/health)
 * Kibana web interface: (http://192.168.50.30:5601/)
@@ -137,7 +137,7 @@ Once built, the Web UIs are available at:
 ### Data Flow 1 - Twitter to Elasticsearch
 TODO - General Description
 
-More details [here](SAMPLES/Twitter_Elasticsearch/README.md).
+More details [here](SAMPLES/Twitter_Elasticsearch/).
 
 ### Data Flow 2 - Mainframe Simulator to HDFS
 TODO - General Description

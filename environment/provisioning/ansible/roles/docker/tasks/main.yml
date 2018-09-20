@@ -19,7 +19,6 @@
     name: vagrant
     groups: docker
     append: yes
-  #notify: Restart docker service
 
 - name: Restart docker service
   service: name=docker enabled=yes state=restarted

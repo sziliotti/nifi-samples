@@ -1,9 +1,12 @@
 ---
 - name: Install SElinux ansible module dependencies
-  yum: name=libselinux-python state=installed
+  yum: 
+    name: libselinux-python 
+    state: installed
 
-#- name: Disable SELinux in conf file
-#  selinux: state=disabled
+- name: Disable SELinux in conf file
+  selinux: 
+    state: disabled
 
 - name: Set SELinux to permissive
   selinux:
@@ -11,4 +14,7 @@
     state: permissive
 
 - name: Disable firewalld
-  service: name=firewalld enabled=no state=stopped
+  service: 
+    name: firewalld 
+    enabled: no 
+    state: stopped

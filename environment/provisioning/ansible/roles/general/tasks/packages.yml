@@ -1,6 +1,8 @@
 ---
 - name: Install EPEL repo
-  yum: name=epel-release state=present
+  yum: 
+    name: epel-release 
+    state: present
 
 - name: Install basic packages and tools
   yum: name={{ item }} state=present
