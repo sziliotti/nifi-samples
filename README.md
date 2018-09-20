@@ -4,7 +4,7 @@ The objetive of this project is show some examples of data ingestion using [Apac
 The descriptions of samples are detailed in the sections below.
 
 ## Prerequisites
-Experienced Linux user, knowledge in Java, containers, Big Data concept and tools, and that you have Ansible, Vagrant and Virtualbox installed on your machine. 
+Experienced Linux user, knowledge in Java, containers, Big Data concept and tools, and that you have Ansible, Vagrant and Virtualbox installed on your machine.
 
 ### Installed on your desktop
 * macOS High Sierra (v10.13.6) (My host Operating System)
@@ -62,8 +62,6 @@ provisioning/
 │   ├── nifi-env-playbook.yml
 │   └── roles
 │       ├── docker
-│       │   ├── handlers
-│       │   │   └── main.yml
 │       │   └── tasks
 │       │       └── main.yml
 │       ├── general
