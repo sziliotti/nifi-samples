@@ -1,5 +1,11 @@
 ---
+- name: Change permissions
+  file:
+    path: /vagrant/environment/provisioning/scripts/setup-hadoop.sh
+    mode: a+x
+
 - name: Setup Hadoop CDH
   shell: /vagrant/environment/provisioning/scripts/setup-hadoop.sh
+  become: yes
 
   

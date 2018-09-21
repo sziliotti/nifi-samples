@@ -18,11 +18,3 @@
     name: firewalld 
     enabled: no 
     state: stopped
-
-
-  
-- name: Stop iptables
-  command: service iptables stop
-
-- name: Stop iptables6
-  command: service ip6tables stop    

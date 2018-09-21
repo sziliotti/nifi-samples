@@ -20,19 +20,6 @@ systemctl disable firewalld
 #chkconfig iptables off
 SCRIPT
 
-$manager_script = <<SCRIPT
-#!/bin/bash
-
-wget -O /etc/yum.repos.d/cloudera-manager.repo http://archive.cloudera.com/cm5/redhat/7/x86_64/cm/cloudera-manager.repo 
-yum -y update
-
-yum -y install oracle-j2sdk1.7 cloudera-manager-server-db cloudera-manager-server cloudera-manager-daemons
-
-service cloudera-scm-server-db initdb
-service cloudera-scm-server-db start
-service cloudera-scm-server start
-SCRIPT
-
 $hosts_script = <<SCRIPT
 cat > /etc/hosts <<EOF
 127.0.0.1       localhost
@@ -43,11 +30,15 @@ Vagrant.configure("2") do |config|
     
     # Define base image
     config.vm.box = "centos/7"
+
+    if Vagrant.has_plugin?("vagrant-cachier")
+        config.cache.scope = :box
+    end
     
     # Manage /etc/hosts on host and VMs
     config.hostmanager.enabled = true
     config.hostmanager.manage_host = true
-    config.hostmanager.manage_guest = false
+    config.hostmanager.manage_guest = true
     config.hostmanager.include_offline = true
     config.hostmanager.ignore_private_ip = false
 
@@ -67,7 +58,7 @@ Vagrant.configure("2") do |config|
     ## CONFIG HADOOP CLUSTER
     ##***************************************
     # Total Hadoop nodes
-    numNodes = 3
+    numNodes = 1
     r = 1..numNodes
     (r.first).upto(r.last).each do |i|
         # Hadoop Nodes configurations.
@@ -95,15 +86,15 @@ Vagrant.configure("2") do |config|
                 node.vm.hostname = "vm-cluster-hadoop-slave#{i}"
                 node.vm.provider :virtualbox do |v|
                     v.name = "hadoop-slave#{i}"
-                    v.customize ["modifyvm", :id, "--memory", 1024]                    
+                    v.customize ["modifyvm", :id, "--memory", 512]                    
                 end
 
             end
 
+            # Enable provisioning with a shell script and Ansible playbook.
             #node.vm.provision :ansible do |ansible|
             #  ansible.inventory_path = "environment/provisioning/ansible/inventory/hosts-hadoop-cluster.inv"
             #  ansible.verbose = "v"
-            #  ansible.sudo = true
             #  ansible.playbook = "environment/provisioning/ansible/hadoop-cluster-playbook.yml"
             #  ansible.limit = 'hadoop_all'
             #end
@@ -117,7 +108,7 @@ Vagrant.configure("2") do |config|
             node.vm.provision :hostmanager            
 
             if i == r.first
-                node.vm.provision :shell, :inline => $manager_script                 
+                node.vm.provision :shell, :path => "environment/provisioning/scripts/setup-hadoop.sh"
             end
         end
     end
@@ -125,12 +116,12 @@ Vagrant.configure("2") do |config|
 
     ## CONFIG NIFI ENV
     ##***************************************  
-    config.vm.define "nifi_env" do |nifi_env|
+    config.vm.define "nifi-env" do |nifi_env|
         nifi_env.vm.hostname = "vm-nifi-env"
         nifi_env.vm.network :private_network, ip: "192.168.50.30"
         nifi_env.vm.provider :virtualbox do |v|
             v.name = "nifi-env"
-            v.customize ["modifyvm", :id, "--memory", 4096]
+            v.customize ["modifyvm", :id, "--memory", 512]
             v.customize ["modifyvm", :id, "--cpus", 1]
         end
         
@@ -163,11 +154,11 @@ Vagrant.configure("2") do |config|
 
         # Enable provisioning with a shell script and Ansible playbook.
         #
-        # Softwares instalation: JDK8, Docker, Hadoop Cluster. 
-        nifi_env.vm.provision "ansible" do |ansible|
-            ansible.playbook = "environment/provisioning/ansible/nifi-env-playbook.yml"
-            ansible.verbose = "v"
-        end
+        # Softwares instalation: JDK8, Docker and NiFi environment. 
+        #nifi_env.vm.provision "ansible" do |ansible|
+        #    ansible.playbook = "environment/provisioning/ansible/nifi-env-playbook.yml"
+        #    ansible.verbose = "v"
+        #end
     end
     
   end
