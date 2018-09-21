@@ -126,11 +126,11 @@ Depending on the hardware of your computer and specifications choice in the Hado
 Once built, the Web UIs are available at:
 * JobTracker web interface: (http://127.0.0.1:50030/jobtracker.jsp)
 * NameNode web interface: (http://127.0.0.1:50070/dfshealth.html) (only when HDFS is enabled)
-* Cloudera Manager web console: (http://192.168.50.10:7180)
-* Nifi web interface: (http://192.168.50.30:8080/nifi)
-* Kafka Manager web interface: (http://192.168.50.30:9000/)
-* Elasticsearch web interface: (http://192.168.50.30:9200/_cat/health)
-* Kibana web interface: (http://192.168.50.30:5601/)
+* Cloudera Manager web console: (http://vm-cluster-hadoop-master:7180)
+* Nifi web interface: (http://vm-nifi-env:8080/nifi)
+* Kafka Manager web interface: (http://vm-nifi-env:9000/)
+* Elasticsearch web interface: (http://vm-nifi-env:9200/_cat/health)
+* Kibana web interface: (http://vm-nifi-env:5601/)
 
 **Note:** Hadoop will use a lot of disk space for the slaves when building a cluster.
 
