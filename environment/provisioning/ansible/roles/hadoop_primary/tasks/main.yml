@@ -7,5 +7,9 @@
 - name: Setup Hadoop CDH
   shell: /vagrant/environment/provisioning/scripts/setup-hadoop.sh
   become: yes
+  register: result
 
+- name: Show output
+  when: result is succeeded
+  debug: msg="{{ result.stdout_lines }}"
   

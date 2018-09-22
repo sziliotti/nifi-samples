@@ -58,7 +58,7 @@ Vagrant.configure("2") do |config|
     ## CONFIG HADOOP CLUSTER
     ##***************************************
     # Total Hadoop nodes
-    numNodes = 1
+    numNodes = 3
     r = 1..numNodes
     (r.first).upto(r.last).each do |i|
         # Hadoop Nodes configurations.
@@ -83,33 +83,35 @@ Vagrant.configure("2") do |config|
                 node.vm.network "forwarded_port", guest: 7180, host: 7180, host_ip: "127.0.0.1"
 
             else
-                node.vm.hostname = "vm-cluster-hadoop-slave#{i}"
+                node.vm.hostname = "vm-cluster-hadoop-slave#{i-1}"
                 node.vm.provider :virtualbox do |v|
-                    v.name = "hadoop-slave#{i}"
+                    v.name = "hadoop-slave#{i-1}"
                     v.customize ["modifyvm", :id, "--memory", 512]                    
                 end
 
             end
 
-            # Enable provisioning with a shell script and Ansible playbook.
-            #node.vm.provision :ansible do |ansible|
-            #  ansible.inventory_path = "environment/provisioning/ansible/inventory/hosts-hadoop-cluster.inv"
-            #  ansible.verbose = "v"
-            #  ansible.playbook = "environment/provisioning/ansible/hadoop-cluster-playbook.yml"
-            #  ansible.limit = 'hadoop_all'
-            #end
-            
-            #node.vm.provision :shell, :inline => $hosts_script
-            #node.vm.provision :hostmanager 
 
-
-            node.vm.provision :shell, :inline => $node_script
             node.vm.provision :shell, :inline => $hosts_script
-            node.vm.provision :hostmanager            
+            node.vm.provision :hostmanager
 
-            if i == r.first
-                node.vm.provision :shell, :path => "environment/provisioning/scripts/setup-hadoop.sh"
+            # Enable provisioning with a shell script and Ansible playbook.
+            node.vm.provision :ansible do |ansible|
+              ansible.inventory_path = "environment/provisioning/ansible/inventory/hosts-hadoop-cluster.inv"
+              ansible.verbose = "vv"
+              ansible.playbook = "environment/provisioning/ansible/hadoop-cluster-playbook.yml"
+              ansible.limit = 'all'
             end
+            
+        
+
+            #node.vm.provision :shell, :inline => $node_script
+            #node.vm.provision :shell, :inline => $hosts_script
+            #node.vm.provision :hostmanager            
+
+            #if i == r.first
+            #    node.vm.provision :shell, :path => "environment/provisioning/scripts/setup-hadoop.sh"
+            #end
         end
     end
 
@@ -157,7 +159,7 @@ Vagrant.configure("2") do |config|
         # Softwares instalation: JDK8, Docker and NiFi environment. 
         #nifi_env.vm.provision "ansible" do |ansible|
         #    ansible.playbook = "environment/provisioning/ansible/nifi-env-playbook.yml"
-        #    ansible.verbose = "v"
+        #    ansible.verbose = "vv"
         #end
     end
     
