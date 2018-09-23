@@ -59,6 +59,13 @@ Vagrant.configure("2") do |config|
     ##***************************************
     # Total Hadoop nodes
     numNodes = 3
+
+    VAGRANT_VM_PROVIDER = "virtualbox"
+    ANSIBLE_RAW_SSH_ARGS = []
+    (1..numNodes-1).each do |machine_id|
+      ANSIBLE_RAW_SSH_ARGS << "-o IdentityFile=#{ENV["VAGRANT_DOTFILE_PATH"]}/machines/machine#{machine_id}/#{VAGRANT_VM_PROVIDER}/private_key"
+    end
+
     r = 1..numNodes
     (r.first).upto(r.last).each do |i|
         # Hadoop Nodes configurations.
@@ -79,7 +86,7 @@ Vagrant.configure("2") do |config|
                 ## Hadoop Cluster Ports mapping:
                 node.vm.network "forwarded_port", guest: 50070, host: 50070, host_ip: "127.0.0.1"
 
-                 ## Cloudera Manager web console Ports mapping:
+                ## Cloudera Manager web console Ports mapping:
                 node.vm.network "forwarded_port", guest: 7180, host: 7180, host_ip: "127.0.0.1"
 
             else
@@ -95,14 +102,17 @@ Vagrant.configure("2") do |config|
             node.vm.provision :shell, :inline => $hosts_script
             node.vm.provision :hostmanager
 
-            # Enable provisioning with a shell script and Ansible playbook.
-            node.vm.provision :ansible do |ansible|
-              ansible.inventory_path = "environment/provisioning/ansible/inventory/hosts-hadoop-cluster.inv"
-              ansible.verbose = "vv"
-              ansible.playbook = "environment/provisioning/ansible/hadoop-cluster-playbook.yml"
-              ansible.limit = 'all'
+            if i == r.last
+                # Enable provisioning with a shell script and Ansible playbook.
+                node.vm.provision :ansible do |ansible|
+                    ansible.playbook = "environment/provisioning/ansible/hadoop-cluster-playbook.yml"
+                    ansible.limit = 'all'
+                    ansible.inventory_path = "environment/provisioning/ansible/inventory/hosts-hadoop-cluster.inv"
+                    ansible.verbose = "vvv"
+                    
+                    #ansible.raw_ssh_args = ANSIBLE_RAW_SSH_ARGS
+                end
             end
-            
         
 
             #node.vm.provision :shell, :inline => $node_script
@@ -127,9 +137,6 @@ Vagrant.configure("2") do |config|
             v.customize ["modifyvm", :id, "--cpus", 1]
         end
         
-        nifi_env.vm.provision :shell, :inline => $hosts_script
-        nifi_env.vm.provision :hostmanager
-
 
         # Create a forwarded port mapping which allows access to a specific port within the machine from a port on the host
         # machine and only allow access via 127.0.0.1 to disable public access.
@@ -153,6 +160,9 @@ Vagrant.configure("2") do |config|
         nifi_env.vm.network "forwarded_port", guest: 9300, host: 9300, host_ip: "127.0.0.1"
         nifi_env.vm.network "forwarded_port", guest: 5601, host: 5601, host_ip: "127.0.0.1"
 
+
+        nifi_env.vm.provision :shell, :inline => $hosts_script
+        nifi_env.vm.provision :hostmanager
 
         # Enable provisioning with a shell script and Ansible playbook.
         #

@@ -11,9 +11,3 @@
   roles:
   - { role: hadoop_primary }
 
-- hosts: hadoop_slaves
-  become: true
-  gather_facts: no
-  roles:
-  - { role: general }
-

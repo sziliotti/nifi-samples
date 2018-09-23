@@ -11,10 +11,7 @@ EOF
 yum -y update
 
 yum -y install oracle-j2sdk1.7 
-yum -y install cloudera-manager-server
-yum -y install cloudera-manager-server-db-2
-yum -y install cloudera-manager-daemons
-yum -y install cloudera-manager-agent
+yum -y install cloudera-manager-server cloudera-manager-server-db-2 cloudera-manager-daemons cloudera-manager-agent
 
 service cloudera-scm-server-db initdb
 service cloudera-scm-server-db start
