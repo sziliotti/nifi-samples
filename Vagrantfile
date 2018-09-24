@@ -63,7 +63,7 @@ Vagrant.configure("2") do |config|
     VAGRANT_VM_PROVIDER = "virtualbox"
     ANSIBLE_RAW_SSH_ARGS = []
     (1..numNodes-1).each do |machine_id|
-      ANSIBLE_RAW_SSH_ARGS << "-o IdentityFile=#{ENV["VAGRANT_DOTFILE_PATH"]}/machines/machine#{machine_id}/#{VAGRANT_VM_PROVIDER}/private_key"
+      ANSIBLE_RAW_SSH_ARGS << "-o IdentityFile=#{ENV["VAGRANT_DOTFILE_PATH"]}/machines/hadoop-node#{machine_id}/#{VAGRANT_VM_PROVIDER}/private_key"
     end
 
     r = 1..numNodes
@@ -110,7 +110,7 @@ Vagrant.configure("2") do |config|
                     ansible.inventory_path = "environment/provisioning/ansible/inventory/hosts-hadoop-cluster.inv"
                     ansible.verbose = "vvv"
                     
-                    #ansible.raw_ssh_args = ANSIBLE_RAW_SSH_ARGS
+                    ansible.raw_ssh_args = ANSIBLE_RAW_SSH_ARGS
                 end
             end
         
