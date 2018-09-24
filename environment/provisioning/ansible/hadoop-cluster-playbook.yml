@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: hadoop_all
   become: true
   gather_facts: no
   roles:
