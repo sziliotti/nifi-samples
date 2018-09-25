@@ -118,8 +118,8 @@ Depending on the hardware of your computer and specifications choice in the Hado
     $ cd nifi-samples
     ```
 7. Make sure you are in the right directory and Vagrantfile is on the same path where you type the command to start the provisioning, and run ```vagrant up``` to create the VM.
-8. Run ```vagrant ssh <hostname>``` to get into your VM. In our case, we create 4 VMs a least, where 3 are for the Hadoop Cluster, and 1 for Docker images containers.
-9. Run ```vagrant destroy``` when you want to destroy and get rid of the VM.
+8. Run ```vagrant ssh <vm-name>``` to get into your VM. In our case, we create 4 VMs a least, where 3 are for the Hadoop Cluster, and 1 for Docker images containers.
+9. Run ```vagrant destroy -f``` when you want to destroy and get rid of the VM.
 
 
 ## Web UI

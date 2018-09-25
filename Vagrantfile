@@ -7,18 +7,6 @@ cat > /etc/hosts <<EOF
 EOF
 SCRIPT
 
-$ssh_master_script = <<SCRIPT
-cp /vagrant/environment/provisioning/resources/id_rsa /home/vagrant/.ssh
-cp /vagrant/environment/provisioning/resources/id_rsa.pub /home/vagrant/.ssh
-sudo chown vagrant /home/vagrant/.ssh/id_rsa
-sudo chgrp vagrant /home/vagrant/.ssh/id_rsa
-cat /vagrant/environment/provisioning/resources/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys
-SCRIPT
-
-$ssh_slaves_script = <<SCRIPT
-cat /vagrant/environment/provisioning/resources/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys
-SCRIPT
-
 Vagrant.configure("2") do |config|
 
     # Provider type
@@ -58,16 +46,12 @@ Vagrant.configure("2") do |config|
 
     ## CONFIG HADOOP CLUSTER
     ##***************************************
+    ansible_limit_value = ""
+    ansible_hadoop_playbook_name = ""
+
     # Total Hadoop nodes
     numNodes = 3
     
-    ansible_limit_value = ""
-    ansible_hadoop_playbook_name = ""
-    #ANSIBLE_RAW_SSH_ARGS = []
-    #(1..numNodes-1).each do |machine_id|
-    #  ANSIBLE_RAW_SSH_ARGS << "-o IdentityFile=#{ENV["VAGRANT_DOTFILE_PATH"]}/machines/hadoop-node#{machine_id}/#{VAGRANT_VM_PROVIDER}/private_key"
-    #end
-
     r = 1..numNodes
     (r.first).upto(r.last).each do |i|
         # Hadoop Nodes configurations.
@@ -111,32 +95,6 @@ Vagrant.configure("2") do |config|
             node.vm.provision :hostmanager
 
 
-            #if i == r.first
-            #    node.vm.provision "ssh-master-config", type: "shell", inline: $ssh_master_script
-            #else
-            #    node.vm.provision "ssh-slave-config", type: "shell", inline: $ssh_slaves_script
-            #end
-
-            #if i == r.last
-                # Enable provisioning with a shell script and Ansible playbook.
-            #    node.vm.provision "#{VAGRANT_ANSIBLE_TYPE_PROVISIONER}" do |ansible|
-            #        ansible.playbook = "environment/provisioning/ansible/hadoop-cluster-playbook.yml"
-            #        ansible.limit = 'hadoop_all'
-            #        ansible.inventory_path = "environment/provisioning/ansible/inventory/hosts-hadoop-cluster.inv"
-            #        ansible.verbose = "vvv"
-                    
-                    #ansible.raw_ssh_args = ANSIBLE_RAW_SSH_ARGS
-            #    end
-            #end
-        
-            #if i == r.first
-            #    ANSIBLE_LIMIT = "vm-cluster-hadoop-master"
-            #    ANSIBLE_PLAYBOOK_NAME = "environment/provisioning/ansible/hadoop-master-playbook.yml"
-            #else
-            #    ANSIBLE_LIMIT = "vm-cluster-hadoop-slave#{i-1}"
-            #    ANSIBLE_PLAYBOOK_NAME = "environment/provisioning/ansible/hadoop-slave-playbook.yml"
-            #end
-
             # Enable provisioning with a shell script and Ansible playbook.
             node.vm.provision "#{VAGRANT_ANSIBLE_TYPE_PROVISIONER}" do |ansible|
                 ansible.playbook = "#{ansible_hadoop_playbook_name}"
@@ -145,14 +103,6 @@ Vagrant.configure("2") do |config|
                 ansible.verbose = "vvv"
             end
 
-
-            #node.vm.provision :shell, :inline => $node_script
-            #node.vm.provision :shell, :inline => $hosts_script
-            #node.vm.provision :hostmanager            
-
-            #if i == r.first
-            #    node.vm.provision :shell, :path => "environment/provisioning/scripts/setup-hadoop.sh"
-            #end
         end
     end
 
