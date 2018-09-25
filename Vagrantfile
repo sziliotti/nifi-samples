@@ -14,7 +14,7 @@ Vagrant.configure("2") do |config|
 
     # Use "ansible_local" to executing ansible-playbook directly on the guest machine; 
     # or Use "ansible" to executing ansible-playbook directly on the host machine.
-    VAGRANT_ANSIBLE_TYPE_PROVISIONER = "ansible"  
+    VAGRANT_ANSIBLE_TYPE_PROVISIONER = "ansible_local"  
     
 
     # Define base image
@@ -46,7 +46,6 @@ Vagrant.configure("2") do |config|
 
     ## CONFIG HADOOP CLUSTER
     ##***************************************
-    ansible_limit_value = ""
     ansible_hadoop_playbook_name = ""
 
     # Total Hadoop nodes
@@ -63,14 +62,13 @@ Vagrant.configure("2") do |config|
             end
            
             if i == r.first
-                ansible_limit_value = "vm-cluster-hadoop-master"
-                ansible_hadoop_playbook_name = "environment/provisioning/ansible/hadoop-master-playbook.yml"
-
                 node.vm.hostname = "vm-cluster-hadoop-master"
                 node.vm.provider "virtualbox" do |v|
                     v.name ="hadoop-master"
                     v.customize ["modifyvm", :id, "--memory", 2048]                    
                 end
+
+                ansible_hadoop_playbook_name = "environment/provisioning/ansible/hadoop-master-playbook.yml"
 
                 ## Hadoop Cluster Ports mapping:
                 node.vm.network "forwarded_port", guest: 50070, host: 50070, host_ip: "127.0.0.1"
@@ -79,15 +77,12 @@ Vagrant.configure("2") do |config|
                 node.vm.network "forwarded_port", guest: 7180, host: 7180, host_ip: "127.0.0.1"
 
             else
-                ansible_limit_value = "vm-cluster-hadoop-slave#{i-1}"
-                ansible_hadoop_playbook_name = "environment/provisioning/ansible/hadoop-slave-playbook.yml"
-
                 node.vm.hostname = "vm-cluster-hadoop-slave#{i-1}"
                 node.vm.provider "virtualbox" do |v|
                     v.name = "hadoop-slave#{i-1}"
                     v.customize ["modifyvm", :id, "--memory", 512]                    
                 end
-
+                ansible_hadoop_playbook_name = "environment/provisioning/ansible/hadoop-slave-playbook.yml"
             end
 
             # Config hosts scripts with hostmanager plugin.
@@ -98,9 +93,7 @@ Vagrant.configure("2") do |config|
             # Enable provisioning with a shell script and Ansible playbook.
             node.vm.provision "#{VAGRANT_ANSIBLE_TYPE_PROVISIONER}" do |ansible|
                 ansible.playbook = "#{ansible_hadoop_playbook_name}"
-                ansible.limit = "#{ansible_limit_value}"
-                ansible.inventory_path = "environment/provisioning/ansible/inventory/hosts-hadoop-cluster.inv"
-                ansible.verbose = "vvv"
+                ansible.verbose = "vvvv"
             end
 
         end
@@ -148,10 +141,10 @@ Vagrant.configure("2") do |config|
         # Enable provisioning with a shell script and Ansible playbook.
         #
         # Softwares instalation: JDK8, Docker and NiFi environment. 
-        #nifi_env.vm.provision "#{VAGRANT_ANSIBLE_TYPE_PROVISIONER}" do |ansible|
-        #    ansible.playbook = "environment/provisioning/ansible/nifi-env-playbook.yml"
-        #    ansible.verbose = "vv"
-        #end
+        nifi_env.vm.provision "#{VAGRANT_ANSIBLE_TYPE_PROVISIONER}" do |ansible|
+            ansible.playbook = "environment/provisioning/ansible/nifi-env-playbook.yml"
+            ansible.verbose = "vv"
+        end
     end
     
   end
