@@ -12,7 +12,7 @@ cp /vagrant/environment/provisioning/resources/id_rsa /home/vagrant/.ssh
 cp /vagrant/environment/provisioning/resources/id_rsa.pub /home/vagrant/.ssh
 sudo chown vagrant /home/vagrant/.ssh/id_rsa
 sudo chgrp vagrant /home/vagrant/.ssh/id_rsa
-cat /vagrant/resources/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys
+cat /vagrant/environment/provisioning/resources/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys
 SCRIPT
 
 $ssh_slaves_script = <<SCRIPT
@@ -23,8 +23,10 @@ Vagrant.configure("2") do |config|
 
     # Provider type
     VAGRANT_VM_PROVIDER = "virtualbox"
-    # Use "ansible_local" to executing ansible-playbook directly on the guest machine; or Use "ansible" to executing ansible-playbook directly on the host machine.
-    VAGRANT_ANSIBLE_TYPE_PROVISIONER = "ansible_local"  
+
+    # Use "ansible_local" to executing ansible-playbook directly on the guest machine; 
+    # or Use "ansible" to executing ansible-playbook directly on the host machine.
+    VAGRANT_ANSIBLE_TYPE_PROVISIONER = "ansible"  
     
 
     # Define base image
@@ -34,7 +36,7 @@ Vagrant.configure("2") do |config|
         config.cache.scope = :box
     end
     
-    # Manage /etc/hosts on host and VMs
+    # Manage /etc/hosts on host and VMs(guests)
     config.hostmanager.enabled = true
     config.hostmanager.manage_host = false
     config.hostmanager.manage_guest = true
@@ -59,10 +61,12 @@ Vagrant.configure("2") do |config|
     # Total Hadoop nodes
     numNodes = 3
     
-    ANSIBLE_RAW_SSH_ARGS = []
-    (1..numNodes-1).each do |machine_id|
-      ANSIBLE_RAW_SSH_ARGS << "-o IdentityFile=#{ENV["VAGRANT_DOTFILE_PATH"]}/machines/hadoop-node#{machine_id}/#{VAGRANT_VM_PROVIDER}/private_key"
-    end
+    ansible_limit_value = ""
+    ansible_hadoop_playbook_name = ""
+    #ANSIBLE_RAW_SSH_ARGS = []
+    #(1..numNodes-1).each do |machine_id|
+    #  ANSIBLE_RAW_SSH_ARGS << "-o IdentityFile=#{ENV["VAGRANT_DOTFILE_PATH"]}/machines/hadoop-node#{machine_id}/#{VAGRANT_VM_PROVIDER}/private_key"
+    #end
 
     r = 1..numNodes
     (r.first).upto(r.last).each do |i|
@@ -75,6 +79,9 @@ Vagrant.configure("2") do |config|
             end
            
             if i == r.first
+                ansible_limit_value = "vm-cluster-hadoop-master"
+                ansible_hadoop_playbook_name = "environment/provisioning/ansible/hadoop-master-playbook.yml"
+
                 node.vm.hostname = "vm-cluster-hadoop-master"
                 node.vm.provider "virtualbox" do |v|
                     v.name ="hadoop-master"
@@ -88,6 +95,9 @@ Vagrant.configure("2") do |config|
                 node.vm.network "forwarded_port", guest: 7180, host: 7180, host_ip: "127.0.0.1"
 
             else
+                ansible_limit_value = "vm-cluster-hadoop-slave#{i-1}"
+                ansible_hadoop_playbook_name = "environment/provisioning/ansible/hadoop-slave-playbook.yml"
+
                 node.vm.hostname = "vm-cluster-hadoop-slave#{i-1}"
                 node.vm.provider "virtualbox" do |v|
                     v.name = "hadoop-slave#{i-1}"
@@ -101,26 +111,40 @@ Vagrant.configure("2") do |config|
             node.vm.provision :hostmanager
 
 
-            if i == r.first
-                node.vm.provision "ssh-master-config", type: "shell", inline: $ssh_master_script
+            #if i == r.first
+            #    node.vm.provision "ssh-master-config", type: "shell", inline: $ssh_master_script
+            #else
+            #    node.vm.provision "ssh-slave-config", type: "shell", inline: $ssh_slaves_script
+            #end
 
-            else
-                node.vm.provision "ssh-slave-config", type: "shell", inline: $ssh_slaves_script
-
-            end
-
-            if i == r.last
+            #if i == r.last
                 # Enable provisioning with a shell script and Ansible playbook.
-                node.vm.provision "#{VAGRANT_ANSIBLE_TYPE_PROVISIONER}" do |ansible|
-                    ansible.playbook = "environment/provisioning/ansible/hadoop-cluster-playbook.yml"
-                    ansible.limit = 'hadoop_all'
-                    ansible.inventory_path = "environment/provisioning/ansible/inventory/hosts-hadoop-cluster.inv"
-                    ansible.verbose = "vvv"
+            #    node.vm.provision "#{VAGRANT_ANSIBLE_TYPE_PROVISIONER}" do |ansible|
+            #        ansible.playbook = "environment/provisioning/ansible/hadoop-cluster-playbook.yml"
+            #        ansible.limit = 'hadoop_all'
+            #        ansible.inventory_path = "environment/provisioning/ansible/inventory/hosts-hadoop-cluster.inv"
+            #        ansible.verbose = "vvv"
                     
                     #ansible.raw_ssh_args = ANSIBLE_RAW_SSH_ARGS
-                end
-            end
+            #    end
+            #end
         
+            #if i == r.first
+            #    ANSIBLE_LIMIT = "vm-cluster-hadoop-master"
+            #    ANSIBLE_PLAYBOOK_NAME = "environment/provisioning/ansible/hadoop-master-playbook.yml"
+            #else
+            #    ANSIBLE_LIMIT = "vm-cluster-hadoop-slave#{i-1}"
+            #    ANSIBLE_PLAYBOOK_NAME = "environment/provisioning/ansible/hadoop-slave-playbook.yml"
+            #end
+
+            # Enable provisioning with a shell script and Ansible playbook.
+            node.vm.provision "#{VAGRANT_ANSIBLE_TYPE_PROVISIONER}" do |ansible|
+                ansible.playbook = "#{ansible_hadoop_playbook_name}"
+                ansible.limit = "#{ansible_limit_value}"
+                ansible.inventory_path = "environment/provisioning/ansible/inventory/hosts-hadoop-cluster.inv"
+                ansible.verbose = "vvv"
+            end
+
 
             #node.vm.provision :shell, :inline => $node_script
             #node.vm.provision :shell, :inline => $hosts_script

@@ -15,4 +15,3 @@ hadoop_master_secondary
 [hadoop_slaves]
 vm-cluster-hadoop-slave1 ansible_ssh_host=192.168.50.12
 vm-cluster-hadoop-slave2 ansible_ssh_host=192.168.50.13
-
