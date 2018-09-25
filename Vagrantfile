@@ -80,7 +80,7 @@ Vagrant.configure("2") do |config|
                 node.vm.hostname = "vm-cluster-hadoop-slave#{i-1}"
                 node.vm.provider "virtualbox" do |v|
                     v.name = "hadoop-slave#{i-1}"
-                    v.customize ["modifyvm", :id, "--memory", 512]                    
+                    v.customize ["modifyvm", :id, "--memory", 1024]                    
                 end
                 ansible_hadoop_playbook_name = "environment/provisioning/ansible/hadoop-slave-playbook.yml"
             end
@@ -107,7 +107,7 @@ Vagrant.configure("2") do |config|
         nifi_env.vm.network "private_network", ip: "192.168.50.30"
         nifi_env.vm.provider "virtualbox" do |v|
             v.name = "nifi-env"
-            v.customize ["modifyvm", :id, "--memory", 512]
+            v.customize ["modifyvm", :id, "--memory", 4096]
             v.customize ["modifyvm", :id, "--cpus", 1]
         end
         
