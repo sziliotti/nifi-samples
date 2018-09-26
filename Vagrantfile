@@ -93,7 +93,7 @@ Vagrant.configure("2") do |config|
             # Enable provisioning with a shell script and Ansible playbook.
             node.vm.provision "#{VAGRANT_ANSIBLE_TYPE_PROVISIONER}" do |ansible|
                 ansible.playbook = "#{ansible_hadoop_playbook_name}"
-                ansible.verbose = "vvvv"
+                ansible.verbose = "vv"
             end
 
         end

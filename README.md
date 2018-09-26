@@ -30,7 +30,7 @@ Experienced Linux user, knowledge in Java, containers, Big Data concept and tool
 ## Topology
 This is the topology of tools instaled in the provisioning´s process, after run ```vagrant up```:
 
-<image_draw>
+[](images/topology.jpg)
 
 ## Features
 * Create and boot VirtualBox instances.
