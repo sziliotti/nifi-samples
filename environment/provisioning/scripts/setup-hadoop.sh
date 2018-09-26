@@ -16,4 +16,4 @@ yum -y install cloudera-manager-server cloudera-manager-server-db-2 cloudera-man
 service cloudera-scm-server-db initdb
 service cloudera-scm-server-db start
 service cloudera-scm-server start
-#service cloudera-scm-agent start
+service cloudera-scm-agent start

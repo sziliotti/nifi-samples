@@ -26,7 +26,7 @@ Vagrant.configure("2") do |config|
     
     # Manage /etc/hosts on host and VMs(guests)
     config.hostmanager.enabled = true
-    config.hostmanager.manage_host = false
+    config.hostmanager.manage_host = true
     config.hostmanager.manage_guest = true
     config.hostmanager.include_offline = true
     config.hostmanager.ignore_private_ip = false
@@ -65,7 +65,7 @@ Vagrant.configure("2") do |config|
                 node.vm.hostname = "vm-cluster-hadoop-master"
                 node.vm.provider "virtualbox" do |v|
                     v.name ="hadoop-master"
-                    v.customize ["modifyvm", :id, "--memory", 2048]                    
+                    v.customize ["modifyvm", :id, "--memory", 1024]                    
                 end
 
                 ansible_hadoop_playbook_name = "environment/provisioning/ansible/hadoop-master-playbook.yml"
@@ -80,7 +80,7 @@ Vagrant.configure("2") do |config|
                 node.vm.hostname = "vm-cluster-hadoop-slave#{i-1}"
                 node.vm.provider "virtualbox" do |v|
                     v.name = "hadoop-slave#{i-1}"
-                    v.customize ["modifyvm", :id, "--memory", 1024]                    
+                    v.customize ["modifyvm", :id, "--memory", 512]                    
                 end
                 ansible_hadoop_playbook_name = "environment/provisioning/ansible/hadoop-slave-playbook.yml"
             end
@@ -107,7 +107,7 @@ Vagrant.configure("2") do |config|
         nifi_env.vm.network "private_network", ip: "192.168.50.30"
         nifi_env.vm.provider "virtualbox" do |v|
             v.name = "nifi-env"
-            v.customize ["modifyvm", :id, "--memory", 4096]
+            v.customize ["modifyvm", :id, "--memory", 1024]
             v.customize ["modifyvm", :id, "--cpus", 1]
         end
         
