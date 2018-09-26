@@ -60,8 +60,12 @@ This is how the provisioning´s scripts, ansible playbooks and roles are organiz
 $ tree provisioning/
 provisioning/
 ├── ansible
+│   ├── ansible.cfg
 │   ├── hadoop-cluster-playbook.yml
+│   ├── hadoop-master-playbook.yml
+│   ├── hadoop-slave-playbook.yml
 │   ├── inventory
+│   │   ├── hosts
 │   │   └── hosts-hadoop-cluster.inv
 │   ├── nifi-env-playbook.yml
 │   └── roles
@@ -93,7 +97,7 @@ provisioning/
     ├── create-kafka-topics.sh
     └── setup-hadoop.sh
 
-17 directories, 17 files
+17 directories, 20 files
 
 ```
 
