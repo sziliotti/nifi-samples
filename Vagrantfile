@@ -93,7 +93,7 @@ Vagrant.configure("2") do |config|
             # Enable provisioning with a shell script and Ansible playbook.
             node.vm.provision "#{VAGRANT_ANSIBLE_TYPE_PROVISIONER}" do |ansible|
                 ansible.playbook = "#{ansible_hadoop_playbook_name}"
-                ansible.verbose = "vvvv"
+                ansible.verbose = "vv"
             end
 
         end
@@ -107,7 +107,7 @@ Vagrant.configure("2") do |config|
         nifi_env.vm.network "private_network", ip: "192.168.50.30"
         nifi_env.vm.provider "virtualbox" do |v|
             v.name = "nifi-env"
-            v.customize ["modifyvm", :id, "--memory", 4096]
+            v.customize ["modifyvm", :id, "--memory", 4596]
             v.customize ["modifyvm", :id, "--cpus", 1]
         end
         
@@ -143,7 +143,7 @@ Vagrant.configure("2") do |config|
         # Softwares instalation: JDK8, Docker and NiFi environment. 
         nifi_env.vm.provision "#{VAGRANT_ANSIBLE_TYPE_PROVISIONER}" do |ansible|
             ansible.playbook = "environment/provisioning/ansible/nifi-env-playbook.yml"
-            ansible.verbose = "vv"
+            ansible.verbose = "vvvv"
         end
     end
     
