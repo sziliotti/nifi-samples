@@ -26,7 +26,7 @@ Vagrant.configure("2") do |config|
     
     # Manage /etc/hosts on host and VMs(guests)
     config.hostmanager.enabled = true
-    config.hostmanager.manage_host = true
+    config.hostmanager.manage_host = false
     config.hostmanager.manage_guest = true
     config.hostmanager.include_offline = true
     config.hostmanager.ignore_private_ip = false
@@ -134,16 +134,20 @@ Vagrant.configure("2") do |config|
         nifi_env.vm.network "forwarded_port", guest: 9300, host: 9300, host_ip: "127.0.0.1"
         nifi_env.vm.network "forwarded_port", guest: 5601, host: 5601, host_ip: "127.0.0.1"
 
+        ## PostgreSQL Ports mapping:
+        nifi_env.vm.network "forwarded_port", guest: 8081, host: 8081, host_ip: "127.0.0.1"
+        nifi_env.vm.network "forwarded_port", guest: 5432, host: 5432, host_ip: "127.0.0.1"
+        nifi_env.vm.network "forwarded_port", guest: 8082, host: 8082, host_ip: "127.0.0.1"
         
+        
+        # Enable provisioning with a shell script and Ansible playbook.
         nifi_env.vm.provision "hosts-config", type: "shell", inline: $hosts_script
         nifi_env.vm.provision :hostmanager
 
-        # Enable provisioning with a shell script and Ansible playbook.
-        #
         # Softwares instalation: JDK8, Docker and NiFi environment. 
         nifi_env.vm.provision "#{VAGRANT_ANSIBLE_TYPE_PROVISIONER}" do |ansible|
             ansible.playbook = "environment/provisioning/ansible/nifi-env-playbook.yml"
-            ansible.verbose = "vvvv"
+            ansible.verbose = "vv"
         end
     end
     

@@ -25,6 +25,7 @@ Experienced Linux user, knowledge in Java, containers, Big Data concept and tool
 * [Elasticsearch](https://www.elastic.co/) (by Docker [image](https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html))
 * [kibana](https://www.elastic.co/products/kibana) (by Docker [image](https://www.elastic.co/guide/en/kibana/current/docker.html))
 * [Apache NiFi](https://nifi.apache.org/) (by Docker [image](https://hub.docker.com/r/apache/nifi/))
+* [PostgreSQL](https://www.postgresql.org/) (by Docker [image](https://hub.docker.com/r/_/postgres/))
 <!-- * [Apache MiNiFi](https://nifi.apache.org/minifi/) (by Docker [image](https://hub.docker.com/r/apache/nifi-minifi/)) -->
 
 ## Topology
@@ -136,6 +137,7 @@ Once built, the Web UIs are available at:
 * Kafka Manager web interface: (http://vm-nifi-env:9000/)
 * Elasticsearch web interface: (http://vm-nifi-env:9200/_cat/health)
 * Kibana web interface: (http://vm-nifi-env:5601/)
+* PostgreSQL web interface via pgAdmin: (http://vm-nifi-env:8082/)
 
 **Note:** Hadoop will use a lot of disk space for the slaves when building a cluster.
 

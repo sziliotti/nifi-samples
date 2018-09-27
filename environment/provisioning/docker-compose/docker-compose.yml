@@ -6,12 +6,14 @@ services:
   zookeeper:
     image: confluent/zookeeper
     container_name: kafka_zookeeper
+    restart: always
     ports:
       - "2181:2181"
 
   kafka:
     image: wurstmeister/kafka
     container_name: kafka-wurstmeister
+    restart: always
     ports:
       - "9092:9092"    
     environment:
@@ -31,6 +33,7 @@ services:
   kafka-manager:
     image: sheepkiller/kafka-manager:stable
     container_name: kafka-manager
+    restart: always
     ports:
       - "9000:9000"    
     environment:
@@ -44,12 +47,14 @@ services:
   nifi:
     image: apache/nifi:latest
     container_name: nifi
+    restart: always
     ports:
       - "8080:8080"
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.4.0
-    container_name: elasticsearch    
+    container_name: elasticsearch
+    restart: always
     environment:
       - node.name=poces-nifi
       - cluster.name=elasticsearch
@@ -63,6 +68,7 @@ services:
   kibana:
     image: docker.elastic.co/kibana/kibana:6.4.0
     container_name: kibana
+    restart: always
     ports:
       - "5601:5601"
     environment:
@@ -72,3 +78,34 @@ services:
       - VIRTUAL_PORT=5601
     depends_on:
       - elasticsearch
+
+  # Use postgres/example user/password credentials
+  postgresql:
+    image: postgres
+    container_name: postgresql
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: example
+ 
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - 8081:8080
+
+  pgadmin4:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    ports:
+      - "8082:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@domain.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    depends_on: 
+      - postgresql
+
+  
