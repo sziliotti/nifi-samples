@@ -30,7 +30,8 @@ Experienced Linux user, knowledge in Java, containers, Big Data concept and tool
 ## Topology
 This is the topology of tools instaled in the provisioning´s process, after run ```vagrant up```:
 
-<image_draw>
+![Topology](images/topology.jpg)
+
 
 ## Features
 * Create and boot VirtualBox instances.
@@ -59,8 +60,12 @@ This is how the provisioning´s scripts, ansible playbooks and roles are organiz
 $ tree provisioning/
 provisioning/
 ├── ansible
+│   ├── ansible.cfg
 │   ├── hadoop-cluster-playbook.yml
+│   ├── hadoop-master-playbook.yml
+│   ├── hadoop-slave-playbook.yml
 │   ├── inventory
+│   │   ├── hosts
 │   │   └── hosts-hadoop-cluster.inv
 │   ├── nifi-env-playbook.yml
 │   └── roles
@@ -92,7 +97,7 @@ provisioning/
     ├── create-kafka-topics.sh
     └── setup-hadoop.sh
 
-17 directories, 17 files
+17 directories, 20 files
 
 ```
 
