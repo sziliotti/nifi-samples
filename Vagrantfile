@@ -145,10 +145,10 @@ Vagrant.configure("2") do |config|
         nifi_env.vm.provision :hostmanager
 
         # Softwares instalation: JDK8, Docker and NiFi environment. 
-        #nifi_env.vm.provision "#{VAGRANT_ANSIBLE_TYPE_PROVISIONER}" do |ansible|
-        #    ansible.playbook = "environment/provisioning/ansible/nifi-env-playbook.yml"
-        #    ansible.verbose = "vv"
-        #end
+        nifi_env.vm.provision "#{VAGRANT_ANSIBLE_TYPE_PROVISIONER}" do |ansible|
+            ansible.playbook = "environment/provisioning/ansible/nifi-env-playbook.yml"
+            ansible.verbose = "vv"
+        end
     end
     
   end
