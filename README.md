@@ -147,7 +147,7 @@ Once built, the Web UIs are available at:
 ## NiFi Samples Descriptions
 
 ### Data Flow 1 - Twitter to Elasticsearch
-TODO - General Description
+The purpose of this demo is to walk you through the process of using NiFi to pull data from Twitter and push it to Elasticsearch.
 
 More details [here](SAMPLES/Twitter_Elasticsearch/).
 
