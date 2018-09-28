@@ -33,10 +33,8 @@ Vagrant.configure("2") do |config|
 
     # Share an additional folder to the guest VM. The first argument is the path on the host to the actual folder. The second argument is
     # the path on the guest to mount the folder. And the optional third argument is a set of non-required options.        
-    config.vm.synced_folder ".", "/vagrant", type: "rsync", 
-        rsync__auto: true, 
-        rsync__exclude: ".git/"
-    
+    config.vm.synced_folder "./", "/vagrant", type: "virtualbox", disabled: false
+
     # Provider-specific configuration so you can fine-tune various backing providers for Vagrant. These expose provider-specific options.   
     config.vm.provider "virtualbox" do |vb|
         # Synchronize clocks each time when desync becomes > 1s (1000ms) between host and guest.
@@ -49,7 +47,7 @@ Vagrant.configure("2") do |config|
     ansible_hadoop_playbook_name = ""
 
     # Total Hadoop nodes
-    numNodes = 3
+    numNodes = 0
     
     r = 1..numNodes
     (r.first).upto(r.last).each do |i|

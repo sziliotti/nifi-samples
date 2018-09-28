@@ -108,9 +108,9 @@ Depending on the hardware of your computer and specifications choice in the Hado
 
 1. [Download and install VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 2. [Download and install Vagrant](http://www.vagrantup.com/).
-3. Install the Vagrant [Hostmanager plugin](https://github.com/smdahlen/vagrant-hostmanager) and [Cachier plugin](https://github.com/fgrehm/vagrant-cachier)
+3. Install the Vagrant [Hostmanager plugin](https://github.com/smdahlen/vagrant-hostmanager), [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest) and [Cachier plugin](https://github.com/fgrehm/vagrant-cachier)
     ```bash
-    $ vagrant plugin install vagrant-hostmanager vagrant-cachier
+    $ vagrant plugin install vagrant-hostmanager vagrant-cachier vagrant-vbguest
     ```
 
 4. Clone this repository.
