@@ -1,2 +1,8 @@
 ---
 - include: restart-mdns.yml
+
+- name: Restart sshd service
+  service:    
+    name: sshd
+    enabled: yes 
+    state: restarted

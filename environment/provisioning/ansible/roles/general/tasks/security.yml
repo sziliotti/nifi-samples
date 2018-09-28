@@ -18,3 +18,22 @@
     name: firewalld 
     enabled: no 
     state: stopped
+
+
+- name: Change PasswordAuthentication in /etc/ssh/sshd_config
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^PasswordAuthentication.*no'
+    line: 'PasswordAuthentication yes'
+  notify: Restart sshd service
+
+
+#- name: Change PasswordAuthentication in /etc/ssh/sshd_config
+#  shell: sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+#  become: yes
+  
+#- name: Restart sshd service
+#  service: 
+#    name: sshd
+#    enabled: yes 
+#    state: restarted

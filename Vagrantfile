@@ -14,7 +14,7 @@ Vagrant.configure("2") do |config|
 
     # Use "ansible_local" to executing ansible-playbook directly on the guest machine; 
     # or Use "ansible" to executing ansible-playbook directly on the host machine.
-    VAGRANT_ANSIBLE_TYPE_PROVISIONER = "ansible_local"  
+    VAGRANT_ANSIBLE_TYPE_PROVISIONER = "ansible"  
     
 
     # Define base image
@@ -65,7 +65,7 @@ Vagrant.configure("2") do |config|
                 node.vm.hostname = "vm-cluster-hadoop-master"
                 node.vm.provider "virtualbox" do |v|
                     v.name ="hadoop-master"
-                    v.customize ["modifyvm", :id, "--memory", 1024]                    
+                    v.customize ["modifyvm", :id, "--memory", 2024]                    
                 end
 
                 ansible_hadoop_playbook_name = "environment/provisioning/ansible/hadoop-master-playbook.yml"
@@ -107,7 +107,7 @@ Vagrant.configure("2") do |config|
         nifi_env.vm.network "private_network", ip: "192.168.50.30"
         nifi_env.vm.provider "virtualbox" do |v|
             v.name = "nifi-env"
-            v.customize ["modifyvm", :id, "--memory", 4596]
+            v.customize ["modifyvm", :id, "--memory", 2500]
             v.customize ["modifyvm", :id, "--cpus", 1]
         end
         
@@ -145,10 +145,10 @@ Vagrant.configure("2") do |config|
         nifi_env.vm.provision :hostmanager
 
         # Softwares instalation: JDK8, Docker and NiFi environment. 
-        nifi_env.vm.provision "#{VAGRANT_ANSIBLE_TYPE_PROVISIONER}" do |ansible|
-            ansible.playbook = "environment/provisioning/ansible/nifi-env-playbook.yml"
-            ansible.verbose = "vv"
-        end
+        #nifi_env.vm.provision "#{VAGRANT_ANSIBLE_TYPE_PROVISIONER}" do |ansible|
+        #    ansible.playbook = "environment/provisioning/ansible/nifi-env-playbook.yml"
+        #    ansible.verbose = "vv"
+        #end
     end
     
   end

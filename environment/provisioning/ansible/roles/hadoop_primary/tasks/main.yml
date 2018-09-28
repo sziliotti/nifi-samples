@@ -12,4 +12,4 @@
 - name: Show output
   when: result is succeeded
   debug: msg="{{ result.stdout_lines }}"
-  
+

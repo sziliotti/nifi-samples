@@ -28,4 +28,8 @@
     state: installed
 
 - name: Start NTP
-  command: service ntpd start
+  service: 
+    name: ntpd
+    enabled: yes 
+    state: started
+  #command: service ntpd start
