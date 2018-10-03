@@ -60,7 +60,7 @@ services:
     restart: always
     environment:
       - node.name=poces-nifi
-      - cluster.name=elasticsearch
+      - cluster.name=elasticsearch-cluster
       - discovery.type=single-node
       - VIRTUAL_HOST=elastic.mydomain.com
       - VIRTUAL_PORT=9200
