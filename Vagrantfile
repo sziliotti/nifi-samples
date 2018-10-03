@@ -47,7 +47,7 @@ Vagrant.configure("2") do |config|
     ansible_hadoop_playbook_name = ""
 
     # Total Hadoop nodes
-    numNodes = 0
+    numNodes = 3
     
     r = 1..numNodes
     (r.first).upto(r.last).each do |i|
@@ -63,7 +63,7 @@ Vagrant.configure("2") do |config|
                 node.vm.hostname = "vm-cluster-hadoop-master"
                 node.vm.provider "virtualbox" do |v|
                     v.name ="hadoop-master"
-                    v.customize ["modifyvm", :id, "--memory", 2024]                    
+                    v.customize ["modifyvm", :id, "--memory", 2048]                    
                 end
 
                 ansible_hadoop_playbook_name = "environment/provisioning/ansible/hadoop-master-playbook.yml"
@@ -78,7 +78,7 @@ Vagrant.configure("2") do |config|
                 node.vm.hostname = "vm-cluster-hadoop-slave#{i-1}"
                 node.vm.provider "virtualbox" do |v|
                     v.name = "hadoop-slave#{i-1}"
-                    v.customize ["modifyvm", :id, "--memory", 512]                    
+                    v.customize ["modifyvm", :id, "--memory", 2048]                    
                 end
                 ansible_hadoop_playbook_name = "environment/provisioning/ansible/hadoop-slave-playbook.yml"
             end
@@ -105,7 +105,7 @@ Vagrant.configure("2") do |config|
         nifi_env.vm.network "private_network", ip: "192.168.50.30"
         nifi_env.vm.provider "virtualbox" do |v|
             v.name = "nifi-env"
-            v.customize ["modifyvm", :id, "--memory", 2500]
+            v.customize ["modifyvm", :id, "--memory", 4096]
             v.customize ["modifyvm", :id, "--cpus", 1]
         end
         
