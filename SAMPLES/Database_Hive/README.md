@@ -1,8 +1,8 @@
-# Data Flow - Mainframe Simulator to HDFS
+# Data Flow - Dastabase Table to Hive/Impala
 
 TODO - Description.
 
-![Mainframe NiFi Flow](images/xxxx.png)
+![Database NiFi Flow](images/xxxx.png)
 
 ## Prerequisites
 * xxxxxx.

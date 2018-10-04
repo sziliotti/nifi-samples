@@ -25,6 +25,7 @@ Experienced Linux user, knowledge in Java, containers, Big Data concept and tool
 * [Elasticsearch](https://www.elastic.co/) (by Docker [image](https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html))
 * [kibana](https://www.elastic.co/products/kibana) (by Docker [image](https://www.elastic.co/guide/en/kibana/current/docker.html))
 * [Apache NiFi](https://nifi.apache.org/) (by Docker [image](https://hub.docker.com/r/apache/nifi/))
+* [Apache NiFi Registry](https://nifi.apache.org/registry.html) (by Docker [image](https://hub.docker.com/r/apache/nifi-registry/))
 <!-- * [Apache MiNiFi](https://nifi.apache.org/minifi/) (by Docker [image](https://hub.docker.com/r/apache/nifi-minifi/)) -->
 * [PostgreSQL](https://www.postgresql.org/) (by Docker [image](https://hub.docker.com/r/_/postgres/))
 
@@ -135,6 +136,7 @@ Once built, the Web UIs are available at:
 * NameNode web interface: (http://127.0.0.1:50070/dfshealth.html) (only when HDFS is enabled)
 * Cloudera Manager web console: (http://vm-cluster-hadoop-master:7180)
 * Nifi web interface: (http://vm-nifi-env:8080/nifi)
+* Nifi Registry web interface: (http://vm-nifi-env:18080/nifi-registry)
 * Kafka Manager web interface: (http://vm-nifi-env:9000/)
 * Elasticsearch web interface: (http://vm-nifi-env:9200/_cat/health)
 * Kibana web interface: (http://vm-nifi-env:5601/)
@@ -154,7 +156,7 @@ More details [here](SAMPLES/Twitter_Elasticsearch/).
 ### Data Flow 2 - Mainframe Simulator to HDFS
 TODO - General Description
 
-More details [here](xxxx).
+More details [here](SAMPLES/Mainframe_HDFS/).
 
 ### Data Flow 3 - Database Table to Hive
 TODO - General Description

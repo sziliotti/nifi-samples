@@ -54,6 +54,15 @@ services:
     ports:
       - "8080:8080"
 
+  nifi-registry:
+    image: apache/nifi-registry:latest
+    container_name: nifi-registry
+    restart: always
+    ports:
+      - "18080:18080"
+    depends_on: 
+      - nifi
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.4.0
     container_name: elasticsearch
