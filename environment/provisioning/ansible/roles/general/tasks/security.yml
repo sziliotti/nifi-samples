@@ -4,11 +4,11 @@
     name: libselinux-python 
     state: installed
 
-- name: Disable SELinux in /etc/selinux/config file
+- name: Disable SELinux in /etc/selinux/config file at next reboot
   selinux: 
     state: disabled
 
-- name: Set SELinux to permissive
+- name: Set SELinux in permissive mode until the machine is rebooted
   selinux:
     policy: targeted
     state: permissive
