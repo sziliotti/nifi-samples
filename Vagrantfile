@@ -14,7 +14,7 @@ Vagrant.configure("2") do |config|
 
     # Use "ansible_local" to executing ansible-playbook directly on the guest machine; 
     # or Use "ansible" to executing ansible-playbook directly on the host machine.
-    VAGRANT_ANSIBLE_TYPE_PROVISIONER = "ansible"  
+    VAGRANT_ANSIBLE_TYPE_PROVISIONER = "ansible_local"  
     
 
     # Define base image
@@ -126,6 +126,9 @@ Vagrant.configure("2") do |config|
 
         ## Apache NiFi Ports mapping:
         nifi_env.vm.network "forwarded_port", guest: 8080, host: 8080, host_ip: "127.0.0.1"
+
+        ## Apache NiFi Registry Ports mapping:
+        nifi_env.vm.network "forwarded_port", guest: 18080, host: 18080, host_ip: "127.0.0.1"
 
         ## ELK stack (Elasticsearch e Kibana) Ports mapping:
         nifi_env.vm.network "forwarded_port", guest: 9200, host: 9200, host_ip: "127.0.0.1"
