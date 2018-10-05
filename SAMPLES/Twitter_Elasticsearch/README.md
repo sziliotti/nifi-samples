@@ -2,7 +2,7 @@
 
 The purpose of this data flow is to show you the process of using NiFi to pull data from Twitter, by filter and push it to Elasticsearch.
 
-![Twitter NiFi Flow](images/twitter-flow.png)
+![Twitter NiFi Flow](images/twitter-flow.PNG)
 
 ## Prerequisites
 * The Nifi, Elasticseach and Kibana´s image container should up and running in our vagrant environemnt.
