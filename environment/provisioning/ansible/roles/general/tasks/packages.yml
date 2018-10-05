@@ -21,7 +21,6 @@
     - python-setuptools
     - python-pip
 
-
 - name: Install NTP
   yum:
     pkg: ntp
@@ -33,6 +32,13 @@
     enabled: yes 
     state: started
   #command: service ntpd start
+
+#- name: Set Timezone to Sao Paulo.
+#  commmand: sudo timedatectl set-timezone America/Sao_Paulo
+
+- name: Set timezone to America/Sao_Paulo.
+  timezone:
+    name: America/Sao_Paulo
 
 - name: Sync clock with NTP server.
   command: sudo hwclock --systohc

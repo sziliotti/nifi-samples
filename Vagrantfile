@@ -14,7 +14,7 @@ Vagrant.configure("2") do |config|
 
     # Use "ansible_local" to executing ansible-playbook directly on the guest machine; 
     # or Use "ansible" to executing ansible-playbook directly on the host machine.
-    VAGRANT_ANSIBLE_TYPE_PROVISIONER = "ansible_local"  
+    VAGRANT_ANSIBLE_TYPE_PROVISIONER = "ansible"  
     
 
     # Define base image
@@ -47,7 +47,7 @@ Vagrant.configure("2") do |config|
     ansible_hadoop_playbook_name = ""
 
     # Total Hadoop nodes
-    numNodes = 3
+    numNodes = 0
     
     r = 1..numNodes
     (r.first).upto(r.last).each do |i|
@@ -105,7 +105,7 @@ Vagrant.configure("2") do |config|
         nifi_env.vm.network "private_network", ip: "192.168.50.30"
         nifi_env.vm.provider "virtualbox" do |v|
             v.name = "nifi-env"
-            v.customize ["modifyvm", :id, "--memory", 4096]
+            v.customize ["modifyvm", :id, "--memory", 3098]
             v.customize ["modifyvm", :id, "--cpus", 1]
         end
         

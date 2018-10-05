@@ -69,13 +69,17 @@ services:
     restart: always
     environment:
       - node.name=poces-nifi
-      - cluster.name=elasticsearch-cluster
+      - cluster.name=es-docker-cluster
       - discovery.type=single-node
       - VIRTUAL_HOST=elastic.mydomain.com
       - VIRTUAL_PORT=9200
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ports:
       - "9200:9200"
       - "9300:9300"
+    volumes:
+      - esdata1:/usr/share/elasticsearch/data
 
   kibana:
     image: docker.elastic.co/kibana/kibana:6.4.0
@@ -120,4 +124,7 @@ services:
     depends_on: 
       - postgresql
 
-  
+
+volumes:
+  esdata1:
+    driver: local 
