@@ -47,7 +47,7 @@ Vagrant.configure("2") do |config|
     ansible_hadoop_playbook_name = ""
 
     # Total Hadoop nodes
-    numNodes = 0
+    numNodes = 3
     
     r = 1..numNodes
     (r.first).upto(r.last).each do |i|
